@@ -1,0 +1,10 @@
+---
+postgres_databases: []
+postgres_users: []
+postgres_privs: []
+postgres_extensions: []
+
+postgres_shared_buffers: 128MB
+postgres_effective_cache_size: 1GB
+postgres_checkpoint_segments: 10
+postgres_checkpoint_completion_target: 0.9

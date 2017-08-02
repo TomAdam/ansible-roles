@@ -1,0 +1,3 @@
+{% for key, value in item.vars.iteritems() %}
+export {{ key }}={{ value|quote }}
+{% endfor %}

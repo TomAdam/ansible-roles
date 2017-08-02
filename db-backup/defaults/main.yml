@@ -1,0 +1,16 @@
+---
+db_backup_install_path: /opt/db-backup
+db_backup_version: master
+db_backup_rotation:
+  daily_backups: 14
+  weekly_day: 1
+  weekly_backups: 10
+  monthly_day: 1
+  monthly_backups: 12
+db_backup_log:
+  file: log/db-backup.log
+db_backup_mailer:
+  host: 127.0.0.1
+  port: 25
+db_backup_cron_time: [0, 2, "*", "*", "*"]
+db_backup_cron_enabled: true

@@ -1,0 +1,3 @@
+---
+exim4_sender_hostname: "{{ inventory_hostname }}"
+mailname: "{{ inventory_hostname }}"

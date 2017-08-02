@@ -1,0 +1,24 @@
+---
+- name: Create DB path
+  file:
+    path: "{{ geoip_country_db_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 755
+
+- name: Download GeoIP DB
+  get_url:
+    url: https://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
+    dest: "{{ geoip_country_db_path }}/GeoIP.dat.gz"
+
+- name: Unzip DB
+  command: gunzip -f "{{ geoip_country_db_path }}/GeoIP.dat.gz"
+
+- name: Set DB permissions
+  file:
+    path: "{{ geoip_country_db_path }}/GeoIP.dat"
+    owner: root
+    group: root
+    mode: 644
+    state: file

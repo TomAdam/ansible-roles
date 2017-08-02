@@ -1,0 +1,37 @@
+---
+- name: Add key for RabbitMQ repository
+  apt_key:
+    data: "{{ lookup('file', 'rabbitmq-repo.asc') }}"
+    state: present
+
+- name: Add RabbitMQ repository
+  apt_repository:
+    repo: deb https://www.rabbitmq.com/debian/ testing main
+    state: present
+
+- name: Install RabbitMQ
+  apt:
+    pkg: rabbitmq-server
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install RabbitMQ management plugin
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+
+- name: Remove guest user
+  rabbitmq_user:
+    user: guest
+    state: absent
+
+- name: Create admin user
+  rabbitmq_user:
+    user: admin
+    password: {{ rabbitmq_admin_password }}
+    tags: administrator
+    vhost: /
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*

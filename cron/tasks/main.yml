@@ -1,0 +1,14 @@
+---
+- name: Install crons
+  cron:
+    user: '{{ item.user }}'
+    minute: '{{ item.time.0 }}'
+    hour: '{{ item.time.1 }}'
+    day: '{{ item.time.2 }}'
+    month: '{{ item.time.3 }}'
+    weekday: '{{ item.time.4 }}'
+    state: present
+    job: '{{ item.job }}'
+    name: '{{ item.name }}'
+  with_items: '{{ cron_tab }}'
+  when: cron_enable

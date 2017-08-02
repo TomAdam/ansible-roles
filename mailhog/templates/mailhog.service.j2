@@ -1,0 +1,10 @@
+[Unit]
+Description=MailHog Email Catcher
+
+[Service]
+Type=simple
+ExecStart={{ mailhog_install_dir }}/mailhog
+User={{ mailhog_user }}
+
+[Install]
+WantedBy=multi-user.target

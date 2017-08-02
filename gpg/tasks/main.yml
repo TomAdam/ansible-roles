@@ -1,0 +1,17 @@
+---
+- name: Import private keys
+  shell: echo "{{ item.value|b64decode }}" | gpg2 --allow-secret-key-import --import
+  with_dict: '{{ gpg_private_keys }}'
+  no_log: true
+  register: result
+  failed_when: "result|failed and 'already in secret keyring' not in result.stderr"
+
+- name: Import public keys
+  shell: echo "{{ item.value|b64decode }}" | gpg2 --import
+  with_dict: '{{ gpg_public_keys }}'
+  no_log: true
+
+- name: Import trust settings
+  shell: echo "{{ item }}" | gpg2 --import-ownertrust
+  with_items: '{{ gpg_trust }}'
+  no_log: true

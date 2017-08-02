@@ -1,0 +1,7 @@
+---
+{{ {'connections': db_backup_connections}|to_nice_yaml(default_style='"') }}
+{{ {'encryption': db_backup_encryption}|to_nice_yaml(default_style='"') }}
+{{ {'s3': db_backup_s3}|to_nice_yaml(default_style='"') }}
+{{ {'rotation': db_backup_rotation}|to_nice_yaml(default_style='"') }}
+{{ {'mailer': db_backup_mailer}|to_nice_yaml(default_style='"') }}
+{{ {'log': db_backup_log}|to_nice_yaml(default_style='"') }}

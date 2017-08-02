@@ -1,0 +1,9 @@
+---
+- name: Create environment files
+  template:
+    src: environment.j2
+    dest: "{{ item.file }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(omit) }}"
+    mode: "{{ item.mode|default(omit) }}"
+  with_items: "{{ environment_files }}"

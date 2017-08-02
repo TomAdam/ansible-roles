@@ -1,0 +1,12 @@
+---
+- name: Add DotDeb key
+  apt_key:
+    data: "{{ lookup('file', 'dotdeb-repo.asc') }}"
+    state: present
+
+- name: Add DotDeb repository
+  apt_repository:
+    repo: '{{ item }}'
+  with_items:
+  - deb https://packages.dotdeb.org {{ ansible_distribution_release }} all
+  - deb-src https://packages.dotdeb.org {{ ansible_distribution_release }} all

@@ -1,0 +1,6 @@
+---
+- name: Add vagrant to ssh-users group
+  user:
+    name: vagrant
+    groups: ssh-users
+    append: yes

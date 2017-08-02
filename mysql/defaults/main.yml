@@ -1,0 +1,11 @@
+---
+# - { name: example, host: 127.0.0.1, password: secret, priv: *.*:USAGE }
+mysql_users: []
+
+# - { name: example, collation: utf8_general_ci, encoding: utf8 }
+mysql_databases: []
+
+mysql_innodb_log_buffer_size: 4MB
+mysql_innodb_log_file_size: 128M
+mysql_innodb_flush_log_at_trx_commit: 1
+mysql_innodb_buffer_pool_instances: 8

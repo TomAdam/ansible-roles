@@ -1,0 +1,17 @@
+---
+- name: Create symfony params folder
+  file:
+    dest: '{{ symfony_params_file_path }}'
+    state: directory
+    owner: '{{ symfony_params_file_user }}'
+    group: '{{ symfony_params_file_group }}'
+  when: symfony_params_template is defined
+
+- name: Write symfony parameters file
+  template:
+    src: 'templates/symfony-params/{{ symfony_params_template }}'
+    dest: '{{ symfony_params_file_path }}/parameters.yml'
+    owner: '{{ symfony_params_file_user }}'
+    group: '{{ symfony_params_file_group }}'
+    mode: 0600
+  when: symfony_params_template is defined

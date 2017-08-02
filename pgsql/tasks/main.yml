@@ -1,0 +1,70 @@
+---
+- name: Add PostgreSQL repo key
+  apt_key:
+    data: "{{ lookup('file', 'postgres-repo.asc') }}"
+    state: present
+
+- name: Add PostgreSQL repository
+  apt_repository:
+    repo: deb https://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
+    state: present
+
+- name: Install PostgreSQL packages
+  apt:
+    pkg: {{ item }}
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+  - postgresql-9.4
+  - postgresql-client-9.4
+  - python-pygresql
+  - python-psycopg2
+  - postgresql-9.4-postgis-2.3
+
+- name: Configure PostgreSQL
+  template:
+    src: postgresql.conf.j2
+    dest: /etc/postgresql/9.4/main/postgresql.conf
+  register: check_postgres_configure
+
+- name: Restart PostgreSQL
+  service:
+    name: postgresql.service
+    enabled: yes
+    state: restarted
+  when: check_postgres_configure | changed
+
+- name: Create databases
+  become_user: postgres
+  postgresql_db:
+    name: {{ item }}
+    state: present
+  with_items: '{{ postgres_databases }}'
+
+- name: Create users
+  become_user: postgres
+  postgresql_user:
+    name: {{ item.user }}
+    password: {{ item.password }}
+    db: {{ item.db|default(omit) }}
+    priv: {{ item.priv|default(omit) }}
+  no_log: true
+  with_items: '{{ postgres_users }}'
+
+- name: Apply privs
+  become_user: postgres
+  postgresql_privs:
+    database: {{ item.db }}
+    roles: {{ item.roles }}
+    privs: {{ item.privs }}
+    type: {{ item.type }}
+    objs: {{ item.objs|default(omit) }}
+  with_items: '{{ postgres_privs }}'
+
+- name: Enable extensions
+  become_user: postgres
+  postgresql_ext:
+    name: '{{ item.name }}'
+    db: '{{ item.db }}'
+  with_items: "{{ postgres_extensions }}"

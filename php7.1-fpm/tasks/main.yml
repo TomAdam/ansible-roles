@@ -1,0 +1,62 @@
+---
+- name: Install PHP FPM
+  apt:
+    pkg: php7.1-fpm
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install PHP packages
+  apt:
+    pkg: {{ item }}
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items: "{{php_packages}}"
+
+- name: Remove default pool
+  file:
+    path: /etc/php/7.1/fpm/pool.d/www.conf
+    state: absent
+  notify: restart php7.1-fpm
+
+- name: Apply PHP FPM settings
+  template:
+    src: php.ini
+    dest: /etc/php/7.1/fpm/php.ini
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Apply PHP FPM conf
+  template:
+    src: php-fpm.conf
+    dest: /etc/php/7.1/fpm/php-fpm.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install pools
+  template:
+    src: templates/fpm-pools/{{ item.src }}
+    dest: /etc/php/7.1/fpm/pool.d/{{ item.dest }}
+  notify: restart php7.1-fpm
+  with_items: "{{php_fpm_pools}}"
+
+# TODO: review security
+#- name: Ensure opcache file cache dir exists
+#  file:
+#    path: '{{ php_fpm_opcache_file_cache }}'
+#    owner: root
+#    group: root
+#    mode: 0777
+#    state: directory
+#  when: php_fpm_opcache_file_cache_only == 1
+
+- name: Install Xdebug
+  apt:
+    pkg: php-xdebug
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  when: php_fpm_xdebug

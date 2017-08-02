@@ -1,0 +1,66 @@
+---
+# passlib for basic auth
+- name: Install Nginx
+  apt:
+    pkg: {{ nginx_package }},python-passlib
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Configure Nginx
+  template:
+    src: etc/nginx/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx
+
+- name: Disable default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+
+- name: Add web user to ssl-cert group
+  user:
+    name: {{ nginx_user }}
+    append: yes
+    groups: ssl-cert
+  notify: restart nginx
+
+- name: Install conf
+  template:
+    src: "templates/nginx/conf/{{ item.src }}"
+    dest: "/etc/nginx/conf.d/{{ item.dest }}"
+  with_items: "{{nginx_conf}}"
+  notify: restart nginx
+
+- name: Install vhosts
+  template:
+    src: "templates/nginx/vhosts/{{ item.src }}"
+    dest: "/etc/nginx/sites-available/{{ item.dest }}"
+  with_items: "{{nginx_vhosts}}"
+  notify: restart nginx
+
+- name: Create basic auth files
+  file:
+    path: {{ item.path }}
+    state: touch
+    owner: {{ nginx_user }}
+  with_items: "{{ nginx_basic_auth }}"
+  no_log: true
+
+- name: Write basic auth passwords
+  htpasswd:
+    crypt_scheme: ldap_sha1
+    name: {{ item.name }}
+    password: {{ item.password }}
+    path: {{ item.path }}
+  with_items: "{{ nginx_basic_auth }}"
+  no_log: true
+
+- name: Enable vhosts
+  file:
+    src: /etc/nginx/sites-available/{{ item.dest }}
+    dest: /etc/nginx/sites-enabled/{{ item.dest }}
+    state: link
+  with_items: "{{nginx_vhosts}}"
+  notify: restart nginx

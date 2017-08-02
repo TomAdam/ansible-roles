@@ -1,0 +1,45 @@
+---
+- name: Clone db backup
+  git:
+    repo: https://github.com/TomAdam/db-backup.git
+    dest: {{db_backup_install_path}}
+    version: {{ db_backup_version }}
+    force: yes
+
+- name: Install composer vendors
+  composer:
+    command: install
+    no_dev: yes
+    no_scripts: yes
+    prefer_dist: yes
+    working_dir: {{db_backup_install_path}}
+
+- name: Configure
+  template:
+    src: config.yml.j2
+    dest: {{db_backup_install_path}}/config.yml
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Install password files
+  template:
+    src: templates/db-backup/{{item.template}}
+    dest: {{db_backup_install_path}}/{{item.target}}
+    owner: root
+    group: root
+    mode: 0600
+  with_items: '{{db_backup_password_files}}'
+
+- name: Install crons
+  cron:
+    user: root
+    minute: {{ db_backup_cron_time.0 }}
+    hour: {{ db_backup_cron_time.1 }}
+    day: {{ db_backup_cron_time.2 }}
+    month: {{ db_backup_cron_time.3 }}
+    weekday: {{ db_backup_cron_time.4 }}
+    state: present
+    job: "cd {{ db_backup_install_path }} && php db-backup"
+    name: "DB Backup"
+  when: db_backup_cron_enabled
