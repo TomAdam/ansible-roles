@@ -6,12 +6,12 @@
 
 - name: Add PostgreSQL repository
   apt_repository:
-    repo: deb https://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
+    repo: "deb https://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
     state: present
 
 - name: Install PostgreSQL packages
   apt:
-    pkg: {{ item }}
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -38,33 +38,33 @@
 - name: Create databases
   become_user: postgres
   postgresql_db:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
-  with_items: '{{ postgres_databases }}'
+  with_items: "{{ postgres_databases }}"
 
 - name: Create users
   become_user: postgres
   postgresql_user:
-    name: {{ item.user }}
-    password: {{ item.password }}
-    db: {{ item.db|default(omit) }}
-    priv: {{ item.priv|default(omit) }}
+    name: "{{ item.user }}"
+    password: "{{ item.password }}"
+    db: "{{ item.db|default(omit) }}"
+    priv: "{{ item.priv|default(omit) }}"
   no_log: true
-  with_items: '{{ postgres_users }}'
+  with_items: "{{ postgres_users }}"
 
 - name: Apply privs
   become_user: postgres
   postgresql_privs:
-    database: {{ item.db }}
-    roles: {{ item.roles }}
-    privs: {{ item.privs }}
-    type: {{ item.type }}
-    objs: {{ item.objs|default(omit) }}
-  with_items: '{{ postgres_privs }}'
+    database: "{{ item.db }}"
+    roles: "{{ item.roles }}"
+    privs: "{{ item.privs }}"
+    type: "{{ item.type }}"
+    objs: "{{ item.objs|default(omit) }}"
+  with_items: "{{ postgres_privs }}"
 
 - name: Enable extensions
   become_user: postgres
   postgresql_ext:
-    name: '{{ item.name }}'
-    db: '{{ item.db }}'
+    name: "{{ item.name }}"
+    db: "{{ item.db }}"
   with_items: "{{ postgres_extensions }}"
