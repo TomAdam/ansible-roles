@@ -10,3 +10,4 @@ php_cli_opcache_file_cache_only: 1
 php_cli_curl_cainfo:
 php_cli_openssl_cafile:
 php_cli_xdebug: false
+php_packages: []

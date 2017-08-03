@@ -11,3 +11,4 @@ php_fpm_curl_cainfo:
 php_fpm_openssl_cafile:
 php_fpm_xdebug: false
 php_fpm_pools: []
+php_packages: []
