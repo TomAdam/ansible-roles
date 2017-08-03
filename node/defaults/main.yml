@@ -1,4 +1,4 @@
 ---
-node_apt_dist: {{ ansible_distribution_release }}
+node_apt_dist: "{{ ansible_distribution_release }}"
 node_apt_version: 6.x
 node_global_packages: []
