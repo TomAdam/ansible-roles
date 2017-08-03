@@ -1,7 +1,7 @@
 ---
 - name: Set hostname
   hostname:
-    name: {{ inventory_hostname }}
+    name: "{{ inventory_hostname }}"
   notify: restart rsyslog
 
 - name: Clean /etc/hosts
@@ -23,15 +23,28 @@
 
 - name: Install system packages
   apt:
-    pkg: {{ item }}
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items: "{{system_packages}}"
+  with_items:
+  - "{{ system_packages }}"
+  - ssl-cert
+  - acl
+  - curl
+  - wget
+  - vim
+  - nano
+  - rsync
+  - locales
+  - zip
+  - screen
+  - htop
+  - apt-transport-https
 
 - name: Generate required locales
   locale_gen:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items: "{{system_locales}}"
 
@@ -75,7 +88,7 @@
     password: "{{ item.password }}"
     append: yes
     groups: "{{ item.groups }}"
-    shell: "{{ item.shell|default("/bin/bash") }}"
+    shell: "{{ item.shell|default('/bin/bash') }}"
   no_log: true
   with_items:
   - "{{ default_users }}"
@@ -124,4 +137,4 @@
     validate: "visudo -c -s -f %s"
 
 - include: vagrant.yml
-  when: vagrant|default(false)
+  when: vagrant
