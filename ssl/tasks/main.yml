@@ -39,6 +39,7 @@
 
 - name: Generate DH params
   command: openssl dhparam -out /etc/ssl/dh/dhparam.pem 2048
+  args:
     creates: /etc/ssl/dh/dhparam.pem
 
 - name: Secure DH params # alright to do this after creation due to folder perms
