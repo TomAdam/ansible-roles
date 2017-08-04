@@ -8,19 +8,19 @@ short_open_tag = Off
 precision = 14
 output_buffering = 4096
 zlib.output_compression = Off
-implicit_flush = On
+implicit_flush = Off
 unserialize_callback_func =
 serialize_precision = -1
-disable_functions =
+disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,
 disable_classes =
-realpath_cache_size = 4096k
+realpath_cache_size = 16M
 realpath_cache_ttl = 120
 zend.enable_gc = On
-expose_php = On
+expose_php = Off
 max_execution_time = 30
 max_input_time = 60
-memory_limit = -1
-error_reporting = {{php_fpm_error_reporting }}
+memory_limit = {{ php_fpm_memory_limit }}
+error_reporting = {{ php_fpm_error_reporting }}
 display_errors = {{ php_fpm_display_errors }}
 display_startup_errors = {{ php_fpm_display_startup_errors }}
 log_errors = On
@@ -34,7 +34,7 @@ variables_order = "GPCS"
 request_order = "GP"
 register_argc_argv = Off
 auto_globals_jit = On
-post_max_size = 8M
+post_max_size = {{ php_fpm_post_max_size }}
 auto_prepend_file =
 auto_append_file =
 default_mimetype = "text/html"
@@ -42,8 +42,9 @@ default_charset = "UTF-8"
 doc_root =
 user_dir =
 enable_dl = Off
+cgi.fix_pathinfo = 0
 file_uploads = On
-upload_max_filesize = 2M
+upload_max_filesize = {{ php_fpm_upload_max_filesize }}
 max_file_uploads = 20
 allow_url_fopen = On
 allow_url_include = Off
@@ -110,6 +111,39 @@ pgsql.log_notice = 0
 [bcmath]
 bcmath.scale = 0
 
+[Session]
+session.save_handler = files
+;session.save_path = "/var/lib/php/sessions"
+session.use_strict_mode = 0
+session.use_cookies = 1
+;session.cookie_secure =
+session.use_only_cookies = 1
+session.name = PHPSESSID
+session.auto_start = 0
+session.cookie_lifetime = 0
+session.cookie_path = /
+session.cookie_domain =
+session.cookie_httponly =
+session.serialize_handler = php
+session.gc_probability = 0
+session.gc_divisor = 1000
+session.gc_maxlifetime = 1440
+session.referer_check =
+session.cache_limiter = nocache
+session.cache_expire = 180
+session.use_trans_sid = 0
+session.sid_length = 26
+session.trans_sid_tags = "a=href,area=href,frame=src,form="
+;session.trans_sid_hosts=""
+session.sid_bits_per_character = 5
+;session.upload_progress.enabled = On
+;session.upload_progress.cleanup = On
+;session.upload_progress.prefix = "upload_progress_"
+;session.upload_progress.name = "PHP_SESSION_UPLOAD_PROGRESS"
+;session.upload_progress.freq =  "1%"
+;session.upload_progress.min_freq = "1"
+;session.lazy_write = On
+
 [Assertion]
 zend.assertions = -1
 
@@ -127,14 +161,15 @@ ldap.max_links = -1
 
 [opcache]
 opcache.enable = 1
-opcache.memory_consumption = 64
-opcache.interned_strings_buffer = 4
+opcache.memory_consumption = 128
+opcache.interned_strings_buffer = 8
 opcache.max_accelerated_files = 100000
 opcache.save_comments = 1
 opcache.fast_shutdown = 1
 opcache.file_cache = "{{ php_fpm_opcache_file_cache }}"
 opcache.file_cache_only = {{ php_fpm_opcache_file_cache_only }}
 opcache.file_cache_consistency_checks = 1
+opcache.file_cache_fallback = 1
 
 [curl]
 curl.cainfo = "{{ php_fpm_curl_cainfo }}"

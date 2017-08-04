@@ -29,7 +29,7 @@
 
 - name: Apply PHP FPM settings
   template:
-    src: php.ini
+    src: php.ini.j2
     dest: /etc/php/7.1/fpm/php.ini
     owner: root
     group: root
@@ -37,7 +37,7 @@
 
 - name: Apply PHP FPM conf
   template:
-    src: php-fpm.conf
+    src: php-fpm.conf.j2
     dest: /etc/php/7.1/fpm/php-fpm.conf
     owner: root
     group: root
