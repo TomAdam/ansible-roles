@@ -1,0 +1,49 @@
+---
+- name: Install pip and supervisor # use system package for systemd script
+  apt:
+    pkg: python-pip,supervisor
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install superlance
+  pip:
+    name: superlance
+    state: present
+  when: supervisor_crashmail_enable
+
+- name: Add supervisor group
+  group:
+    name: "{{ supervisor_group }}"
+
+- name: Add users to supervisor group
+  user:
+    name: "{{ item }}"
+    append: yes
+    groups: "{{ supervisor_group }}"
+  with_items: "{{ supervisor_users }}"
+
+- name: Configure supervisor
+  template:
+    src: supervisord.conf.j2
+    dest: /etc/supervisor/supervisord.conf
+    owner: root
+    group: "{{ supervisor_group }}"
+    mode: 0644
+  register: check_configure_supervisor
+
+- name: Install supervisor configs
+  template:
+    src: "templates/supervisor/{{ item.template }}"
+    dest: "/etc/supervisor/conf.d/{{ item.dest }}"
+    owner: root
+    group: "{{ supervisor_group }}"
+    mode: 0644
+  with_items: "{{ supervisor_configs }}"
+  register: check_install_supervisor_configs
+
+# TODO: move logs to a common folder?
+- name: Reload config if changed
+  command: supervisorctl update
+  when: check_configure_supervisor|changed or check_install_supervisor_configs|changed
+  ignore_errors: true # log dirs may not be available yet

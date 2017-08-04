@@ -1,0 +1,5 @@
+---
+supervisor_configs: []
+supervisor_crashmail_enable: false
+supervisor_users: []
+supervisor_group: supervisor

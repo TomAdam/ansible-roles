@@ -1,0 +1,31 @@
+;
+; {{ ansible_managed }}
+;
+
+[unix_http_server]
+file=/var/run/supervisor.sock
+chmod=0770
+chown=root:{{ supervisor_group }}
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid
+childlogdir=/var/log/supervisor
+logfile_maxbytes=50MB
+logfile_backups=10
+loglevel=info
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisor.sock
+
+{% if supervisor_crashmail_enable %}
+    [eventlistener:crashmailbatch]
+    command=crashmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject }}"
+    events=PROCESS_STATE,TICK_60
+{% endif %}
+
+[include]
+files=/etc/supervisor/conf.d/*.conf
