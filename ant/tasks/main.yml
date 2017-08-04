@@ -1,0 +1,7 @@
+---
+- name: Install Ant
+  apt:
+    pkg: openjdk-8-jdk-headless,ant # needs the jdk (deps are for jre only) or you get issues with ant
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
