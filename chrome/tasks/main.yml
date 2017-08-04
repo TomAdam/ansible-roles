@@ -1,0 +1,42 @@
+---
+- name: Add Google repo key
+  apt_key:
+    data: "{{ lookup('file', 'google-repo.asc') }}"
+    state: present
+
+- name: Add chrome repo # this file is clobbered by chrome so can't use https
+  apt_repository:
+    repo: deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+    filename: google-chrome
+
+- name: Install chrome
+  apt:
+    pkg: google-chrome-stable
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Check for existing chromedriver
+  stat:
+    path: /usr/local/bin/chromedriver
+  register: chrome_chromedriver_stat
+
+- name: Download chromedriver
+  get_url:
+    url: "{{ chrome_chromedriver_download_url }}"
+    dest: /tmp/chromedriver.zip
+    owner: root
+    group: root
+    mode: 0700
+    checksum: "{{ chrome_chromedriver_checksum }}"
+  when: not chrome_chromedriver_stat.stat.exists
+
+- name: Unpack chromedriver
+  unarchive:
+    src: /tmp/chromedriver.zip
+    dest: /usr/local/bin
+    remote_src: yes
+    owner: root
+    group: root
+    mode: 0755
+  when: not chrome_chromedriver_stat.stat.exists
