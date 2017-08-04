@@ -54,13 +54,9 @@
     dest: /etc/default/locale
 
 - name: Set default timezone
-  copy:
-    content: "{{ system_timezone }}\n"
-    dest: /etc/timezone
-    owner: root
-    group: root
-    mode: 0644
-  notify: [update timezone, restart cron]
+  timezone:
+    name: "{{ system_timezone }}"
+  notify: restart cron
 
 - name: Set adduser dir mode
   lineinfile:
