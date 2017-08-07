@@ -123,14 +123,5 @@
   register: check_pruned_moduli
   changed_when: "'moduli identical' not in check_pruned_moduli.stdout"
 
-- name: Configure sudo
-  template:
-    src: etc/sudoers.j2
-    dest: /etc/sudoers
-    owner: root
-    group: root
-    mode: 0440
-    validate: "visudo -c -s -f %s"
-
 - include: vagrant.yml
   when: vagrant

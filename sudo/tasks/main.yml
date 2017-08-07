@@ -1,0 +1,26 @@
+---
+- name: Install sudo
+  apt:
+    pkg: sudo
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Configure sudo
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers
+    owner: root
+    group: root
+    mode: 0440
+    validate: "visudo -c -s -f %s"
+
+- name: Add additional configuration
+  template:
+    src: "templates/sudo/{{ item.src }}"
+    dest: "/etc/sudoers.d/{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0440
+    validate: "visudo -c -s -f %s"
+  with_items: "{{ sudo_additional_config }}"
