@@ -1,32 +1,22 @@
 ---
-- name: Install private keys
+- name: Install SSL private keys
   copy:
-    content: "{{ item.value|b64decode }}"
-    dest: /etc/ssl/private/{{ item.key }}.key
+    content: "{{ item.data|b64decode }}"
+    dest: /etc/ssl/private/{{ item.name }}.key
     owner: root
     group: ssl-cert
     mode: 0640
-  with_dict: '{{ssl_keys}}'
+  with_items: "{{ ssl_keys }}"
   no_log: true
 
-- name: Install ssl certificates
+- name: Install SSL certificates
   copy:
-    content: "{{ item.value|b64decode }}"
-    dest: /etc/ssl/certs/{{ item.key }}.pem
+    content: "{{ item.data|b64decode }}"
+    dest: /etc/ssl/certs/{{ item.name }}.pem
     owner: root
     group: root
     mode: 0644
-  with_dict: '{{ssl_certs}}'
-  no_log: true
-
-- name: Install stapling certs
-  copy:
-    content: "{{ item.value|b64decode }}"
-    dest: /etc/ssl/certs/{{ item.key }}.stapling.pem
-    owner: root
-    group: root
-    mode: 0644
-  with_dict: '{{ssl_stapling}}'
+  with_items: "{{ ssl_certs }}"
   no_log: true
 
 - name: Create DH folder
@@ -42,7 +32,7 @@
   args:
     creates: /etc/ssl/dh/dhparam.pem
 
-- name: Secure DH params # alright to do this after creation due to folder perms
+- name: Secure DH params # secure to do this after creation due to folder perms
   file:
     path: /etc/ssl/dh/dhparam.pem
     state: file
