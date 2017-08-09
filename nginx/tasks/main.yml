@@ -33,6 +33,13 @@
   with_items: "{{ nginx_conf }}"
   notify: restart nginx
 
+- name: Install snippets
+  template:
+    src: "templates/nginx/snippets/{{ item.src }}"
+    dest: "/etc/nginx/snippets/{{ item.dest }}"
+  with_items: "{{ nginx_snippets }}"
+  notify: restart nginx
+
 - name: Install vhosts
   template:
     src: "templates/nginx/vhosts/{{ item.src }}"
