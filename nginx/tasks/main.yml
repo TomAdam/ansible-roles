@@ -64,10 +64,19 @@
   with_items: "{{ nginx_basic_auth }}"
   no_log: true
 
+- name: Disable vhosts
+  file:
+    path: "/etc/nginx/sites-available/{{ item.dest }}"
+    state: absent
+  with_items: "{{ nginx_vhosts }}"
+  when: not item.enabled
+  notify: restart nginx
+
 - name: Enable vhosts
   file:
     src: "/etc/nginx/sites-available/{{ item.dest }}"
-    dest: "/etc/nginx/sites-enabled/{{ item.dest }}"
+    path: "/etc/nginx/sites-enabled/{{ item.dest }}"
     state: link
   with_items: "{{ nginx_vhosts }}"
+  when: item.enabled
   notify: restart nginx
