@@ -48,10 +48,12 @@
   notify: restart nginx
 
 - name: Create basic auth files
-  file:
-    path: "{{ item.path }}"
-    state: touch
+  copy:
+    dest: "{{ item.path }}"
     owner: "{{ nginx_user }}"
+    mode: 0600
+    content: ""
+    force: false
   with_items: "{{ nginx_basic_auth }}"
   no_log: true
 
@@ -62,21 +64,13 @@
     password: "{{ item.password }}"
     path: "{{ item.path }}"
   with_items: "{{ nginx_basic_auth }}"
-  no_log: true
-
-- name: Disable vhosts
-  file:
-    path: "/etc/nginx/sites-available/{{ item.dest }}"
-    state: absent
-  with_items: "{{ nginx_vhosts }}"
-  when: not item.enabled
   notify: restart nginx
+  no_log: true
 
 - name: Enable vhosts
   file:
     src: "/etc/nginx/sites-available/{{ item.dest }}"
     path: "/etc/nginx/sites-enabled/{{ item.dest }}"
-    state: link
+    state: "{{ 'link' if item.enabled else 'absent' }}"
   with_items: "{{ nginx_vhosts }}"
-  when: item.enabled
   notify: restart nginx
