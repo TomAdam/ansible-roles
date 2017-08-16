@@ -45,7 +45,7 @@
 
 - name: Install pools
   template:
-    src: "templates/fpm-pools/{{ item.src }}"
+    src: "templates/fpm/pools/{{ item.src }}"
     dest: "/etc/php/7.1/fpm/pool.d/{{ item.dest }}"
   notify: restart php7.1-fpm
   with_items: "{{ php_fpm_pools }}"
