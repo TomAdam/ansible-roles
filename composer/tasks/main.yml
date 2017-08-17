@@ -1,7 +1,7 @@
 ---
 - name: Install PHP zip extension
   apt:
-    pkg: php7.1-zip
+    pkg: "php{{ composer_php_version }}-zip"
     state: present
     update_cache: yes
     cache_valid_time: 3600
