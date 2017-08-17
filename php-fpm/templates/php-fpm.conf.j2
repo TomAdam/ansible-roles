@@ -1,0 +1,9 @@
+;
+; {{ ansible_managed }}
+;
+
+[global]
+pid = /run/php/php{{ php_fpm_version }}-fpm.pid
+error_log = /var/log/php{{ php_fpm_version }}-fpm.log
+log_level = warning
+include = /etc/php/{{ php_fpm_version }}/fpm/pool.d/*.conf

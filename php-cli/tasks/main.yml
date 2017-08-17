@@ -1,7 +1,7 @@
 ---
 - name: Install PHP CLI
   apt:
-    pkg: php7.1-cli
+    pkg: "php{{ php_cli_version }}-cli"
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -25,7 +25,7 @@
 - name: Apply PHP CLI settings
   template:
     src: php.ini
-    dest: /etc/php/7.1/cli/php.ini
+    dest: "/etc/php/{{ php_cli_version }}/cli/php.ini"
     owner: root
     group: root
     mode: 0644

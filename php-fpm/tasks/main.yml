@@ -1,7 +1,7 @@
 ---
 - name: Install PHP FPM
   apt:
-    pkg: php7.1-fpm
+    pkg: "php{{ php_fpm_version }}-fpm"
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -24,13 +24,13 @@
 
 - name: Remove default pool
   file:
-    path: /etc/php/7.1/fpm/pool.d/www.conf
+    path: "/etc/php/{{ php_fpm_version }}/fpm/pool.d/www.conf"
     state: absent
 
 - name: Apply PHP FPM settings
   template:
     src: php.ini.j2
-    dest: /etc/php/7.1/fpm/php.ini
+    dest: "/etc/php/{{ php_fpm_version }}/fpm/php.ini"
     owner: root
     group: root
     mode: 0644
@@ -38,7 +38,7 @@
 - name: Apply PHP FPM conf
   template:
     src: php-fpm.conf.j2
-    dest: /etc/php/7.1/fpm/php-fpm.conf
+    dest: "/etc/php/{{ php_fpm_version }}/fpm/php-fpm.conf"
     owner: root
     group: root
     mode: 0644
@@ -46,13 +46,16 @@
 - name: Install pools
   template:
     src: "templates/fpm/pools/{{ item.src }}"
-    dest: "/etc/php/7.1/fpm/pool.d/{{ item.dest }}"
-  notify: restart php7.1-fpm
+    dest: "/etc/php/{{ php_fpm_version }}/fpm/pool.d/{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart php-fpm
   with_items: "{{ php_fpm_pools }}"
 
 - name: Shut down server if no pools
   service:
-    name: php7.1-fpm
+    name: "php{{ php_fpm_version }}-fpm"
     state: stopped
     enabled: no
   when: php_fpm_pools|length == 0
