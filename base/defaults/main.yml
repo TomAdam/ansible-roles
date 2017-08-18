@@ -11,3 +11,4 @@ default_users: []
 users: []
 local_hostnames: []
 vagrant: false
+known_hosts: []

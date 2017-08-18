@@ -123,5 +123,15 @@
   register: check_pruned_moduli
   changed_when: "'moduli identical' not in check_pruned_moduli.stdout"
 
+- name: Add system known hosts
+  lineinfile:
+    dest: /etc/ssh/ssh_known_hosts
+    line: "{{ item }}"
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ known_hosts }}"
+
 - include: vagrant.yml
   when: vagrant
