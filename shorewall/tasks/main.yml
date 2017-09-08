@@ -1,7 +1,7 @@
 ---
 - name: Install Shorewall
   apt:
-    pkg: {{ item }}
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -17,8 +17,8 @@
 
 - name: Configure ipv4
   template:
-    src: shorewall/{{ item.src }}
-    dest: /etc/shorewall/{{ item.dest }}
+    src: "shorewall/{{ item.src }}"
+    dest: "/etc/shorewall/{{ item.dest }}"
   with_items:
   - { src: interfaces.j2, dest: interfaces }
   - { src: policy.j2, dest: policy }
@@ -34,8 +34,8 @@
 
 - name: Configure ipv6
   template:
-    src: shorewall6/{{ item.src }}
-    dest: /etc/shorewall6/{{ item.dest }}
+    src: "shorewall6/{{ item.src }}"
+    dest: "/etc/shorewall6/{{ item.dest }}"
   with_items:
   - { src: interfaces.j2, dest: interfaces }
   - { src: policy.j2, dest: policy }
@@ -49,10 +49,10 @@
   when: reg_shorewall6_configure|changed
   notify: restart shorewall6
 
-- name: Install defaults
+- name: Configure defaults
   template:
-    src: default/{{ item.src }}
-    dest: {{ item.dest }}
+    src: "default/{{ item.src }}"
+    dest: "{{ item.dest }}"
   with_items:
   - { src: shorewall.j2, dest: /etc/default/shorewall }
   - { src: shorewall6.j2, dest: /etc/default/shorewall6 }
@@ -60,12 +60,12 @@
 - name: Enable ipv4 service
   service:
     name: shorewall
-    enabled: {{ shorewall_enable }}
+    enabled: "{{ shorewall_enable }}"
 
 - name: Enable ipv6 service
   service:
     name: shorewall6
-    enabled: {{ shorewall_enable }}
+    enabled: "{{ shorewall_enable }}"
 
 - name: Configure fail2ban
   template:
