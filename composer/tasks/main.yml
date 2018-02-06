@@ -24,5 +24,5 @@
     working_dir: /
   with_items: "{{ composer_global_packages }}"
 
-- include: vagrant.yml
+- include_tasks: vagrant.yml
   when: vagrant and composer_create_swap
