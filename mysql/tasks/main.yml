@@ -6,7 +6,7 @@
 
 - name: Add MySQL repository
   apt_repository:
-    repo: deb https://repo.mysql.com/apt/debian/ {{ ansible_distribution_release }} mysql-5.7
+    repo: "deb https://repo.mysql.com/apt/debian/ {{ ansible_distribution_release }} mysql-5.7"
 
 # this solves a repo issue
 - name: Update APT
@@ -20,7 +20,7 @@
 
 - name: Install MySQL packages
   apt:
-    pkg: {{ item }}
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -87,4 +87,4 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
   no_log: true
-  with_items: '{{ mysql_users }}'
+  with_items: "{{ mysql_users }}"
