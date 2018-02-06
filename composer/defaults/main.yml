@@ -1,5 +1,4 @@
 ---
-composer_php_version: 7.1
 composer_global_packages: []
 composer_keep_updated: true
 composer_create_swap: false
