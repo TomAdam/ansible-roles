@@ -1,11 +1,11 @@
 ---
 - name: Create mailhog user
   user:
-    name: {{ mailhog_user }}
+    name: "{{ mailhog_user }}"
     createhome: no
     shell: /bin/false
     system: yes
-    password: *
+    password: "*"
 
 - name: Create mailhog directory
   file:
