@@ -1,5 +1,3 @@
 ---
 ssl_certs: []
 ssl_keys: []
-dns_primary_nameserver: 8.8.8.8
-dns_secondary_nameserver: 8.8.4.4
