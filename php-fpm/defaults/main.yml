@@ -1,4 +1,5 @@
 ---
+php_fpm_version: "{{ php_version }}"
 php_fpm_date_timezone: Europe/London
 php_fpm_memory_limit: 64M
 php_fpm_error_reporting: E_ALL & ~E_DEPRECATED & ~E_STRICT
@@ -14,4 +15,4 @@ php_fpm_curl_cainfo:
 php_fpm_openssl_cafile:
 php_fpm_xdebug: false
 php_fpm_pools: []
-php_packages: []
+php_fpm_packages: "{{ php_packages|default([]) }}"

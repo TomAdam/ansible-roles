@@ -2,7 +2,7 @@
 - name: Install SSL private keys
   copy:
     content: "{{ item.data|b64decode }}"
-    dest: /etc/ssl/private/{{ item.name }}.key
+    dest: "/etc/ssl/private/{{ item.name }}.key"
     owner: root
     group: ssl-cert
     mode: 0640
@@ -12,12 +12,20 @@
 - name: Install SSL certificates
   copy:
     content: "{{ item.data|b64decode }}"
-    dest: /etc/ssl/certs/{{ item.name }}.pem
+    dest: "/etc/ssl/certs/{{ item.name }}.pem"
     owner: root
     group: root
     mode: 0644
   with_items: "{{ ssl_certs }}"
-  no_log: true
+
+- name: Install SSL stapling certificates
+  copy:
+    content: "{{ item.data|b64decode }}"
+    dest: "/etc/ssl/certs/{{ item.name }}.stapling.pem"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ ssl_stapling }}"
 
 - name: Create DH folder
   file:
