@@ -18,6 +18,15 @@
     mode: 0644
   with_items: "{{ ssl_certs }}"
 
+- name: Install SSL stapling certificates
+  copy:
+    content: "{{ item.data|b64decode }}"
+    dest: "/etc/ssl/certs/{{ item.name }}.stapling.pem"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ ssl_stapling }}"
+
 - name: Create DH folder
   file:
     path: /etc/ssl/dh

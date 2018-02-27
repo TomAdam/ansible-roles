@@ -1,3 +1,4 @@
 ---
 ssl_certs: []
 ssl_keys: []
+ssl_stapling: []
