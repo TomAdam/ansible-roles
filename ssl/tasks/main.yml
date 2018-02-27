@@ -17,7 +17,6 @@
     group: root
     mode: 0644
   with_items: "{{ ssl_certs }}"
-  no_log: true
 
 - name: Create DH folder
   file:
