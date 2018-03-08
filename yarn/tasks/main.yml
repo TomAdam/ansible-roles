@@ -1,0 +1,15 @@
+---
+- name: Install Yarn repo key
+  apt_key:
+    data: "{{ lookup('file', 'yarn-repo.asc') }}"
+    state: present
+
+- name: Add Yarn repository
+  apt_repository:
+    repo: 'deb https://dl.yarnpkg.com/debian/ stable main'
+
+- name: Install Yarn
+  apt:
+    name: yarn
+    update_cache: yes
+    cache_valid_time: 3600
