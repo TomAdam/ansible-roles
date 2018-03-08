@@ -7,3 +7,12 @@
     group: "{{ item.group|default(omit) }}"
     mode: "{{ item.mode|default(omit) }}"
   with_items: "{{ environment_files }}"
+
+- name: Create dotenv files
+  template:
+    src: dotenv.j2
+    dest: "{{ item.file }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(omit) }}"
+    mode: "{{ item.mode|default(omit) }}"
+  with_items: "{{ dotenv_files }}"
