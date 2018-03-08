@@ -3,6 +3,7 @@ postgres_databases: []
 postgres_users: []
 postgres_privs: []
 postgres_extensions: []
+postgres_additional_packages: []
 
 postgres_shared_buffers: 128MB
 postgres_effective_cache_size: 1GB

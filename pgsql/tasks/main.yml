@@ -16,16 +16,16 @@
     update_cache: yes
     cache_valid_time: 3600
   with_items:
-  - postgresql-9.4
-  - postgresql-client-9.4
+  - "postgresql-{{ postgres_version }}"
+  - "postgresql-client-{{ postgres_version }}"
   - python-pygresql
   - python-psycopg2
-  - postgresql-9.4-postgis-2.3
+  - "{{ postgres_additional_packages }}"
 
 - name: Configure PostgreSQL
   template:
     src: postgresql.conf.j2
-    dest: /etc/postgresql/9.4/main/postgresql.conf
+    dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
   register: check_postgres_configure
 
 - name: Restart PostgreSQL
