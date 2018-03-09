@@ -24,7 +24,7 @@
 
 - name: Configure PostgreSQL
   template:
-    src: postgresql.conf.j2
+    src: "postgresql.{{ postgres_version }}.conf.j2"
     dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
   register: check_postgres_configure
 

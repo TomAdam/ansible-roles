@@ -7,5 +7,10 @@ postgres_additional_packages: []
 
 postgres_shared_buffers: 128MB
 postgres_effective_cache_size: 1GB
-postgres_checkpoint_segments: 10
 postgres_checkpoint_completion_target: 0.9
+
+# v9.4
+postgres_checkpoint_segments: 10
+
+# v9.5
+postgres_max_wal_size: 480MB # max_wal_size = (3 * checkpoint_segments) * 16MB

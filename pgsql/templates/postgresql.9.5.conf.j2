@@ -1,7 +1,7 @@
-data_directory = '/var/lib/postgresql/{{ postgres_version }}/main'
-hba_file = '/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf'
-ident_file = '/etc/postgresql/{{ postgres_version }}/main/pg_ident.conf'
-external_pid_file = '/var/run/postgresql/{{ postgres_version }}-main.pid'
+data_directory = '/var/lib/postgresql/9.5/main'
+hba_file = '/etc/postgresql/9.5/main/pg_hba.conf'
+ident_file = '/etc/postgresql/9.5/main/pg_ident.conf'
+external_pid_file = '/var/run/postgresql/9.5-main.pid'
 
 listen_addresses = 'localhost'
 port = 5432
@@ -13,7 +13,7 @@ ssl = off
 shared_buffers = {{ postgres_shared_buffers }}
 dynamic_shared_memory_type = posix
 
-checkpoint_segments = {{ postgres_checkpoint_segments }}
+max_wal_size = {{ postgres_max_wal_size }}
 checkpoint_completion_target = {{ postgres_checkpoint_completion_target }}
 
 effective_cache_size = {{ postgres_effective_cache_size }}
@@ -21,7 +21,7 @@ effective_cache_size = {{ postgres_effective_cache_size }}
 log_line_prefix = '%m [%p] %q%u@%d '
 log_timezone = 'UTC'
 
-stats_temp_directory = '/var/run/postgresql/{{ postgres_version }}-main.pg_stat_tmp'
+stats_temp_directory = '/var/run/postgresql/9.5-main.pg_stat_tmp'
 
 datestyle = 'iso, dmy'
 timezone = 'UTC'
