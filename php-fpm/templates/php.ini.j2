@@ -13,8 +13,8 @@ unserialize_callback_func =
 serialize_precision = -1
 disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,
 disable_classes =
-realpath_cache_size = 16M
-realpath_cache_ttl = 120
+realpath_cache_size = {{ php_fpm_realpath_cache_size }}
+realpath_cache_ttl = {{ php_fpm_realpath_cache_ttl }}
 zend.enable_gc = On
 expose_php = Off
 max_execution_time = 30
@@ -161,15 +161,16 @@ ldap.max_links = -1
 
 [opcache]
 opcache.enable = 1
-opcache.memory_consumption = 128
+opcache.memory_consumption = {{ php_fpm_opcache_memory_consumption }}
 opcache.interned_strings_buffer = 8
-opcache.max_accelerated_files = 100000
+opcache.max_accelerated_files = {{ php_fpm_opcache_max_accelerated_files }}
 opcache.save_comments = 1
 opcache.fast_shutdown = 1
 opcache.file_cache = "{{ php_fpm_opcache_file_cache }}"
 opcache.file_cache_only = {{ php_fpm_opcache_file_cache_only }}
 opcache.file_cache_consistency_checks = 1
 opcache.file_cache_fallback = 1
+opcache.validate_timestamps = {{ php_fpm_opcache_validate_timestamps }}
 
 [curl]
 curl.cainfo = "{{ php_fpm_curl_cainfo }}"
