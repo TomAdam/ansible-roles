@@ -29,7 +29,7 @@
 
 - name: Test ipv4
   command: shorewall check
-  when: reg_shorewall_configure|changed
+  when: reg_shorewall_configure is changed
   notify: restart shorewall
 
 - name: Configure ipv6
@@ -46,7 +46,7 @@
 
 - name: Test ipv6
   command: shorewall6 check
-  when: reg_shorewall6_configure|changed
+  when: reg_shorewall6_configure is changed
   notify: restart shorewall6
 
 - name: Configure defaults
