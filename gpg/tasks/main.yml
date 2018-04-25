@@ -6,12 +6,64 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Ensure {{ gpg_key_basedir }} config directory exists with right permissions
+  file:
+    dest: "~/{{ gpg_key_basedir }}"
+    state: directory
+    mode: 0700
+
+- name: Write private keys to {{ gpg_key_basedir }}
+  copy:
+    content: "{{ item.key|b64decode }}"
+    dest: "~/{{ gpg_key_basedir }}/{{ item.name }}"
+  with_items: "{{ gpg_private_keys }}"
+
+- name: Write private key passphrases to {{ gpg_key_basedir }}
+  copy:
+    content: "{{ item.passphrase }}"
+    dest: "~/{{ gpg_key_basedir }}/{{ item.name }}.passphrase"
+  with_items: "{{ gpg_private_keys }}"
+
+- name: Set gpg pinentry mode to loopback in config file.
+  lineinfile:
+    dest: "~/.gnupg/gpg.conf"
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+    create: yes
+  with_items:
+    - line: "use-agent"
+      regexp: "^use-agent"
+    - line: "pinentry-mode loopback"
+      regexp: "^pinentry-mode"
+
+- name: Set gpg-agent config file to allow loopback pinentry.
+  lineinfile:
+    dest: "~/.gnupg/gpg-agent.conf"
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+    create: yes
+  with_items:
+    - line: "allow-loopback-pinentry"
+      regexp: "^allow-loopback-pinentry"
+
 - name: Import private keys
-  shell: echo "{{ item.value|b64decode }}" | gpg2 --allow-secret-key-import --import
-  with_dict: '{{ gpg_private_keys }}'
+  shell: "cat ~/{{ gpg_key_basedir }}/{{ item.name }}.passphrase | gpg2 --batch --passphrase-fd 0 --import ~/{{ gpg_key_basedir }}/{{ item.name }}"
+  with_items: "{{ gpg_private_keys }}"
   no_log: true
   register: result
-  failed_when: "result|failed and 'already in secret keyring' not in result.stderr"
+  failed_when: "result is failed and 'already in secret keyring' not in result.stderr"
+
+- name: Remove private keys from {{ gpg_key_basedir }}
+  file:
+    path: "~/{{ gpg_key_basedir }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ gpg_private_keys }}"
+
+- name: Remove private key passphrases from {{ gpg_key_basedir }}
+  file:
+    path: "~/{{ gpg_key_basedir }}/{{ item.name }}.passphrase"
+    state: absent
+  with_items: "{{ gpg_private_keys }}"
 
 - name: Import public keys
   shell: echo "{{ item.value|b64decode }}" | gpg2 --import
