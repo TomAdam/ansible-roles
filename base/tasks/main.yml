@@ -73,10 +73,13 @@
   - .bashrc
   - .profile
 
-- name: Add ssh user group
+- name: Add ssh user groups
   group:
-    name: ssh-users
+    name: "{{ item }}"
     system: yes
+  with_items:
+  - "ssh-users"
+  - "{{ ssh_extra_user_groups }}"
 
 - name: Create users
   user:

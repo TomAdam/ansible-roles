@@ -12,3 +12,5 @@ users: []
 local_hostnames: []
 vagrant: false
 known_hosts: []
+ssh_extra_user_groups: []
+ssh_extra_conf_files: []
