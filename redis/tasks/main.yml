@@ -11,3 +11,4 @@
     name: vm.overcommit_memory
     value: 1
     reload: yes
+  when: redis_overcommit_memory
