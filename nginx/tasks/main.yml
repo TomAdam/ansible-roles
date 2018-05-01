@@ -1,4 +1,16 @@
 ---
+- name: Add Nginx key
+  apt_key:
+    data: "{{ lookup('file', 'nginx-repo.asc') }}"
+    state: present
+
+- name: Add Nginx repository
+  apt_repository:
+    repo: '{{ item }}'
+  with_items:
+  - deb https://nginx.org/packages/debian/ {{ ansible_distribution_release }} nginx
+  - deb-src https://nginx.org/packages/debian/ {{ ansible_distribution_release }} nginx
+
 # passlib for basic auth
 - name: Install Nginx
   apt:
