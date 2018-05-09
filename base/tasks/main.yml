@@ -41,6 +41,7 @@
   - screen
   - htop
   - apt-transport-https
+  - man-db
 
 - name: Generate required locales
   locale_gen:
