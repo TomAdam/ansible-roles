@@ -1,6 +1,7 @@
 ---
 - name: Per-user AWS install and config
-  become: "{{ aws_cli_user_config.user }}"
+  become: yes
+  become_user: "{{ aws_cli_user_config.user }}"
   include_tasks: install.yml
   with_items: "{{ aws_cli_config }}"
   loop_control:
