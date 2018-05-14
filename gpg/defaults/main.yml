@@ -1,1 +1,2 @@
-gpg_key_basedir: ".gnupg"
+gpg_config: []
+gpg_default_basedir: "~/.gnupg"

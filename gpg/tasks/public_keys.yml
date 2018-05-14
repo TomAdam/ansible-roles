@@ -1,0 +1,18 @@
+---
+- name: "Import public key {{ gpg_user_public_key.id }}"
+  command: gpg2 --import
+  args:
+    stdin: "{{ gpg_user_public_key.key|b64decode }}"
+  changed_when: "'imported: 1' in gpg_user_public_key_result.stderr"
+  register: gpg_user_public_key_result
+
+- name: "Check if owner trust record exists for key {{ gpg_user_public_key.id }}"
+  command: "gpg2 --export-ownertrust"
+  changed_when: "gpg_user_public_key.id ~ ':' ~ (gpg_user_public_key.owner_trust_level + 1) ~ ':' not in gpg_user_owner_trust.stdout"
+  register: gpg_user_owner_trust
+
+- name: "Import trust settings for key {{ gpg_user_public_key.id }}"
+  command: gpg2 --import-ownertrust
+  args:
+    stdin: "{{ gpg_user_public_key.id }}:{{gpg_user_public_key.owner_trust_level + 1}}:"
+  when: gpg_user_owner_trust is changed
