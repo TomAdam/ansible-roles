@@ -16,27 +16,34 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Check for existing chromedriver
-  stat:
-    path: /usr/local/bin/chromedriver
-  register: chrome_chromedriver_stat
+- name: Check existing chromedriver version
+  command: /usr/local/bin/chromedriver --version
+  changed_when: chrome_chromedriver_version_result is failed or chrome_chromedriver_version|string not in chrome_chromedriver_version_result.stdout
+  failed_when: chrome_chromedriver_version_result.rc not in [0, 2]
+  register: chrome_chromedriver_version_result
 
-- name: Download chromedriver
-  get_url:
-    url: "{{ chrome_chromedriver_download_url }}"
-    dest: /tmp/chromedriver.zip
-    owner: root
-    group: root
-    mode: 0700
-    checksum: "{{ chrome_chromedriver_checksum }}"
-  when: not chrome_chromedriver_stat.stat.exists
+- block:
+  - name: Get temporary path for chromedriver download
+    tempfile:
+      state: file
+      suffix: .chromedriver.zip
+    register: chrome_chromedriver_download_path
 
-- name: Unpack chromedriver
-  unarchive:
-    src: /tmp/chromedriver.zip
-    dest: /usr/local/bin
-    remote_src: yes
-    owner: root
-    group: root
-    mode: 0755
-  when: not chrome_chromedriver_stat.stat.exists
+  - name: Download chromedriver
+    get_url:
+      url: "{{ chrome_chromedriver_download_url }}"
+      dest: "{{ chrome_chromedriver_download_path.path }}"
+      owner: root
+      group: root
+      mode: 0600
+      checksum: "{{ chrome_chromedriver_checksum }}"
+
+  - name: Unpack chromedriver
+    unarchive:
+      src: "{{ chrome_chromedriver_download_path.path }}"
+      dest: /usr/local/bin
+      remote_src: yes
+      owner: root
+      group: root
+      mode: 0755
+  when: chrome_chromedriver_version_result is changed
