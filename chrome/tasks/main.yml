@@ -11,7 +11,7 @@
 
 - name: Install chrome
   apt:
-    pkg: google-chrome-stable
+    pkg: google-chrome-stable,libgconf-2-4
     state: present
     update_cache: yes
     cache_valid_time: 3600
