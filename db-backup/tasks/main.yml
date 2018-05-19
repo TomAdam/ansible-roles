@@ -1,4 +1,11 @@
 ---
+- name: Create db-backup user
+  user:
+    name: "{{ db_backup_user }}"
+    createhome: yes
+    system: yes
+    shell: /bin/false
+
 - name: Clone db backup
   git:
     repo: https://github.com/TomAdam/db-backup.git
@@ -18,22 +25,13 @@
   template:
     src: config.yml.j2
     dest: "{{ db_backup_install_path }}/config.yml"
-    owner: root
-    group: root
+    owner: "{{ db_backup_user }}"
+    group: "{{ db_backup_user }}"
     mode: 0600
 
-- name: Install password files
-  template:
-    src: "templates/db-backup/{{ item.template }}"
-    dest: "{{ db_backup_install_path }}/{{ item.target }}"
-    owner: root
-    group: root
-    mode: 0600
-  with_items: "{{ db_backup_password_files }}"
-
-- name: Install crons
+- name: Install cron
   cron:
-    user: root
+    user: "{{ db_backup_user }}"
     minute: "{{ db_backup_cron_time.0 }}"
     hour: "{{ db_backup_cron_time.1 }}"
     day: "{{ db_backup_cron_time.2 }}"
