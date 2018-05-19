@@ -14,7 +14,7 @@
 # passlib for basic auth
 - name: Install Nginx
   apt:
-    pkg: "{{ nginx_package }},python-passlib"
+    pkg: "nginx,python-passlib"
     state: present
     update_cache: yes
     cache_valid_time: 3600
