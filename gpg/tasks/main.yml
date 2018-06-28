@@ -7,8 +7,6 @@
     cache_valid_time: 3600
 
 - name: Per-user GPG config
-  become: yes
-  become_user: "{{ gpg_user_config.user }}"
   include_tasks: per_user.yml
   with_items: "{{ gpg_config }}"
   loop_control:
