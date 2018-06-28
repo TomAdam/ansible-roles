@@ -1,7 +1,13 @@
 ---
+- name: "Get user details for {{ gpg_user_config.user }}"
+  user:
+    name: "{{ gpg_user_config.user }}"
+    state: present
+  register: gpg_user_details
+
 - name: "Set vars for user {{ gpg_user_config.user }}"
   set_fact:
-    gpg_basedir: "{{ gpg_user_config.gpg_basedir|default(gpg_default_basedir) }}"
+    gpg_basedir: "{{ gpg_user_details.home }}/.gnupg"
 
 - name: "Ensure {{ gpg_basedir }} directory exists with secure permissions"
   file:
