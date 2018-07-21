@@ -4,9 +4,16 @@
     repo: 'deb http://ftp.debian.org/debian {{ ansible_distribution_release }}-backports main'
     update_cache: yes
 
+- name: Check if Nginx running
+  command: systemctl is-active nginx.service
+  failed_when: certbot_nginx_active.rc not in [0, 3]
+  changed_when: false
+  register: certbot_nginx_active
+
+# The Nginx plugin should only be installed if Nginx is installed as the package has a dependency on Nginx
 - name: Install certbot
   apt:
-    name: certbot
+    name: "certbot{{ (certbot_nginx_active.stdout == 'active') | ternary (',python3-certbot-nginx', '') }}"
     default_release: '{{ ansible_distribution_release }}-backports'
     state: present
     update_cache: yes
