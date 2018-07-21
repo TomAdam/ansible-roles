@@ -6,3 +6,5 @@ nginx_load_modules: []
 nginx_conf: []
 nginx_snippets: []
 nginx_package: nginx-light
+
+nginx_certbot_plugin: false

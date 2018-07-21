@@ -1,0 +1,19 @@
+---
+- name: Check if certificate already exists
+  stat:
+    path: '/etc/letsencrypt/live/{{ certbot_certs_item.domains | first }}/cert.pem'
+  register: certbot_certs_item_stat
+
+- name: Create certificate
+  command: 'certbot certonly --{{ certbot_mode }} --noninteractive --agree-tos --email {{ certbot_certs_item.admin_email }} -d {{ certbot_certs_item.domains | join(",") }} {{ certbot_dry_run | ternary("--dry-run", "") }}'
+  when: not certbot_certs_item_stat.stat.exists
+
+- name: Patch standalone authentication to Nginx
+  replace:
+    path: '/etc/letsencrypt/renewal/{{ certbot_certs_item.domains | first }}.conf'
+    regexp: '{{ item.regexp }}'
+    replace: '{{ item.replace }}'
+  with_items:
+  - {regexp: 'authenticator = standalone', replace: 'authenticator = nginx'}
+  - {regexp: 'installer = None', replace: 'installer = nginx'}
+  when: certbot_mode == 'standalone'

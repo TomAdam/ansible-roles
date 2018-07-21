@@ -7,6 +7,15 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Install certbot plugin
+  apt:
+    name: python3-certbot-nginx
+    default_release: '{{ ansible_distribution_release }}-backports'
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  when: nginx_certbot_plugin
+
 - name: Configure Nginx
   template:
     src: etc/nginx/nginx.conf.j2
