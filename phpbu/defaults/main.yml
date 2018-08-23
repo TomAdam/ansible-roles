@@ -1,0 +1,13 @@
+---
+phpbu_enable: true
+
+# v5.1.2
+phpbu_download_url: https://phar.phpbu.de/phpbu-5.1.2.phar
+phpbu_download_checksum: 0a8067afb3049c1cda3082775eb8c2f8979f52bc0f08457eb5ca4f19057cd3ff
+phpbu_config_schema_url: https://schema.phpbu.de/5.1/phpbu.xsd
+
+phpbu_cron_enable: true
+
+phpbu_log_dir: /var/log/phpbu
+phpbu_lib_dir: /var/lib/phpbu
+phpbu_backup_dir: '{{ phpbu_lib_dir }}/backups'
