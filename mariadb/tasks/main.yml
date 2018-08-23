@@ -1,0 +1,84 @@
+---
+- name: Add MariaDB repo key
+  apt_key:
+    data: "{{ lookup('file', 'mariadb-repo.asc') }}"
+    state: present
+
+- name: Add MariaDB repository
+  apt_repository:
+    repo: "deb https://mirrors.ukfast.co.uk/sites/mariadb/repo/10.3/debian stretch main"
+
+#- name: Check if MariaDB server installed
+#  shell: dpkg-query -W -f='${db:Status-Abbrev}' mariadb-server || true
+#  register: mariadb_installed
+
+- name: Install MariaDB packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+  - mariadb-server
+  - mariadb-client
+  - python-mysqldb # required by ansible
+
+#- name: Stop MySQL if fresh install
+#  service:
+#    name: mysql
+#    state: stopped
+#  when: mysql_installed.stdout != "ii "
+#
+#- name: Delete InnoDB logs if fresh install # changing logfile size causes restart issue until logs deleted
+#  shell: rm -f /var/lib/mysql/ib_logfile[01]
+#  when: mysql_installed.stdout != "ii "
+
+#- name: Configure
+#  template:
+#    src: my.cnf.j2
+#    dest: /etc/mysql/my.cnf
+#    owner: root
+#    group: root
+#    mode: 0644
+#  notify: restart mysql
+
+#- name: Start MySQL if fresh install
+#  service:
+#    name: mysql
+#    state: started
+#  when: mysql_installed.stdout != "ii "
+
+- name: Set MySQL root password
+  mysql_user:
+    name: "root"
+    host: "{{ item }}"
+    password: "{{ mysql_root_password }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    check_implicit_admin: yes
+  with_items:
+  - 127.0.0.1
+  - ::1
+  - localhost
+
+- name: Create databases
+  mysql_db:
+    name: "{{ item.name }}"
+    collation: "{{ item.collation | default('utf8_general_ci') }}"
+    encoding: "{{ item.encoding | default('utf8') }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  with_items: '{{ mysql_databases }}'
+
+- name: Create users
+  mysql_user:
+    name: "{{ item.name }}"
+    host: "{{ item.host | default('localhost') }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv | default('*.*:USAGE') }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  no_log: true
+  with_items: "{{ mysql_users }}"
