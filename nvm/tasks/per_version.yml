@@ -1,0 +1,7 @@
+- name: 'Install Node version {{ nvm_user_config_version.version }}'
+  shell: 'bash -ic "nvm install {{ nvm_user_config_version.version }}"'
+  when: nvm_user_config_version.version != 'system'
+
+- name: 'Install global packages for Node version {{ nvm_user_config_version.version }}'
+  command: 'bash -ic "nvm exec {{ nvm_user_config_version.version }}  npm install -g --production {{ item }}"'
+  with_items: '{{ nvm_user_config_version.global_packages }}'

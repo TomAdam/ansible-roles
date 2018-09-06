@@ -1,0 +1,44 @@
+---
+- become_user: '{{ nvm_user_config.user }}'
+  become: true
+  block:
+
+  - name: Check NVM version
+    command: 'bash -ic "nvm --version"'
+    failed_when: nvm_installed_version.rc != 0 and nvm_installed_version.rc != 127
+    register: nvm_installed_version
+
+  - block:
+
+    - name: Download NVM
+      get_url:
+        url: 'https://github.com/creationix/nvm/archive/v{{ nvm_version}}.tar.gz'
+        checksum: 'sha256:{{ nvm_checksum }}'
+        dest: '/tmp/nvm_v{{ nvm_version}}.tar.gz'
+        mode: '0600'
+
+    - name: Create extract directory
+      file:
+        path: '/tmp/nvm_{{ nvm_version}}'
+        state: directory
+
+    - name: Unpack NVM
+      unarchive:
+        src: '/tmp/nvm_v{{ nvm_version}}.tar.gz'
+        dest: '/tmp/nvm_{{ nvm_version}}'
+        extra_opts: ['--strip-components=1', '--show-stored-names']
+        remote_src: yes
+
+    - name: Install NVM
+      command: '/tmp/nvm_{{ nvm_version}}/install.sh'
+
+    when: nvm_installed_version.stdout != nvm_version
+
+  - name: Per-version NVM config
+    include_tasks: per_version.yml
+    with_items: '{{ nvm_user_config.versions }}'
+    loop_control:
+      loop_var: nvm_user_config_version
+
+  - name: 'Set default Node version to {{ nvm_user_config.default_version }}'
+    command: 'bash -ic "nvm alias default {{ nvm_user_config.default_version }}"'
