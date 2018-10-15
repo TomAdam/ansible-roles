@@ -8,6 +8,7 @@ postgres_additional_packages: []
 postgres_shared_buffers: 128MB
 postgres_effective_cache_size: 1GB
 postgres_checkpoint_completion_target: 0.9
+postgres_max_connections: 100
 
 # The following 2 options can cause irretrievable data corruption on a system crash. Only change the value to off when
 # you don't care about the data, e.g. in a local env.
