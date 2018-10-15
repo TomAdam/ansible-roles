@@ -33,7 +33,7 @@
     name: postgresql.service
     enabled: yes
     state: restarted
-  when: check_postgres_configure | changed
+  when: check_postgres_configure is changed
 
 - name: Create databases
   become_user: postgres
