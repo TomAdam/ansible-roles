@@ -3,6 +3,12 @@ postgres_databases: []
 postgres_users: []
 postgres_privs: []
 postgres_extensions: []
+
+postgres_default_packages:
+- "postgresql-{{ postgres_version }}"
+- "postgresql-client-{{ postgres_version }}"
+- python-pygresql
+- python-psycopg2
 postgres_additional_packages: []
 
 postgres_shared_buffers: 128MB
