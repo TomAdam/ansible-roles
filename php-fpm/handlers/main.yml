@@ -4,3 +4,4 @@
     name: "php{{ php_fpm_version }}-fpm"
     state: restarted
     enabled: yes
+  when: php_fpm_pools|length > 0
