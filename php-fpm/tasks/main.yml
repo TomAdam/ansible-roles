@@ -12,6 +12,7 @@
     state: present
     update_cache: yes
     cache_valid_time: 3600
+  notify: restart php-fpm
 
 - name: Install Xdebug
   apt:
@@ -20,11 +21,13 @@
     update_cache: yes
     cache_valid_time: 3600
   when: php_fpm_xdebug
+  notify: restart php-fpm
 
 - name: Remove default pool
   file:
     path: "/etc/php/{{ php_fpm_version }}/fpm/pool.d/www.conf"
     state: absent
+  notify: restart php-fpm
 
 - name: Apply PHP FPM settings
   template:
@@ -33,6 +36,7 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart php-fpm
 
 - name: Apply PHP FPM conf
   template:
@@ -41,6 +45,7 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart php-fpm
 
 - name: Install pools
   template:
