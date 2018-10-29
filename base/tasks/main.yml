@@ -64,7 +64,7 @@
     name: "{{ item }}"
     system: yes
   with_items:
-  - "ssh-users"
+  - ssh-users
   - "{{ ssh_extra_user_groups }}"
 
 - name: Create users
@@ -74,28 +74,31 @@
     append: yes
     groups: "{{ item.groups }}"
     shell: "{{ item.shell|default('/bin/bash') }}"
-  no_log: true
   with_items:
   - "{{ default_users }}"
   - "{{ users }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: Assign authorized keys - default users
   authorized_key:
     user: "{{ item.0.name }}"
     key: "{{ lookup('file', item.1) }}"
-  no_log: true
   with_subelements:
   - "{{ default_users }}"
   - authorized_keys
+  loop_control:
+    label: "{{ item.0.name }} - {{ item.1 }}"
 
 - name: Assign authorized keys - users
   authorized_key:
     user: "{{ item.0.name }}"
     key: "{{ lookup('file', item.1) }}"
-  no_log: true
   with_subelements:
   - "{{ users }}"
   - authorized_keys
+  loop_control:
+    label: "{{ item.0.name }} - {{ item.1 }}"
 
 - name: Configure sshd
   template:
