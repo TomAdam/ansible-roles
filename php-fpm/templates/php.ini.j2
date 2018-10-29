@@ -171,6 +171,7 @@ opcache.file_cache_only = {{ php_fpm_opcache_file_cache_only }}
 opcache.file_cache_consistency_checks = 1
 opcache.file_cache_fallback = 1
 opcache.validate_timestamps = {{ php_fpm_opcache_validate_timestamps }}
+opcache.revalidate_freq = {{ php_fpm_opcache_revalidate_freq }}
 
 [curl]
 curl.cainfo = "{{ php_fpm_curl_cainfo }}"

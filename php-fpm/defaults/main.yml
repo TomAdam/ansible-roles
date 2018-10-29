@@ -16,7 +16,8 @@ php_fpm_opcache_memory_consumption: 128
 php_fpm_opcache_max_accelerated_files: 100000
 php_fpm_opcache_file_cache: ~
 php_fpm_opcache_file_cache_only: 0
-php_fpm_opcache_validate_timestamps: 1
+php_fpm_opcache_validate_timestamps: 0
+php_fpm_opcache_revalidate_freq: 10
 php_fpm_curl_cainfo:
 php_fpm_openssl_cafile:
 php_fpm_xdebug: false
