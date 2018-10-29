@@ -20,5 +20,10 @@ php_fpm_opcache_validate_timestamps: 1
 php_fpm_curl_cainfo:
 php_fpm_openssl_cafile:
 php_fpm_xdebug: false
+php_fpm_xdebug_remote_enable: true
+php_fpm_xdebug_remote_host:
+php_fpm_xdebug_remote_autostart: true
+php_fpm_xdebug_idekey: fpm
+php_fpm_xdebug_max_nesting_level: 500
 php_fpm_pools: []
 php_fpm_packages: "{{ php_packages|default([]) }}"
