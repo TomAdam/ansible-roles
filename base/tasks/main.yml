@@ -23,25 +23,10 @@
 
 - name: Install system packages
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ base_default_system_packages + system_packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-  - "{{ system_packages }}"
-  - ssl-cert
-  - acl
-  - curl
-  - wget
-  - vim
-  - nano
-  - rsync
-  - locales
-  - zip
-  - screen
-  - htop
-  - apt-transport-https
-  - man-db
 
 - name: Generate required locales
   locale_gen:

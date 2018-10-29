@@ -14,3 +14,17 @@ vagrant: false
 known_hosts: []
 ssh_extra_user_groups: []
 ssh_extra_conf_files: []
+base_default_system_packages:
+- ssl-cert
+- acl
+- curl
+- wget
+- vim
+- nano
+- rsync
+- locales
+- zip
+- screen
+- htop
+- apt-transport-https
+- man-db
