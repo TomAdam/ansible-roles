@@ -22,12 +22,21 @@
     dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
   register: check_postgres_configure
 
+- name: Set access control
+  template:
+    src: pg_hba.conf.j2
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    owner: postgres
+    group: postgres
+    mode: 0640
+  register: check_postgres_access
+
 - name: Restart PostgreSQL
   service:
     name: postgresql.service
     enabled: yes
     state: restarted
-  when: check_postgres_configure is changed
+  when: check_postgres_configure is changed or check_postgres_access is changed
 
 - name: Create databases
   become_user: postgres
@@ -52,7 +61,7 @@
     database: "{{ item.db }}"
     roles: "{{ item.roles }}"
     privs: "{{ item.privs }}"
-    type: "{{ item.type }}"
+    type: "{{ item.type|default(omit) }}"
     objs: "{{ item.objs|default(omit) }}"
   with_items: "{{ postgres_privs }}"
 
