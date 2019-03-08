@@ -1,0 +1,13 @@
+- name: Per-user NVM config
+  include_tasks: per_user.yml
+  with_items: '{{ nvm_config }}'
+  loop_control:
+    loop_var: nvm_user_config
+
+- name: Clean temp files
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+  - '/tmp/nvm_v{{ nvm_version}}.tar.gz'
+  - '/tmp/nvm_{{ nvm_version}}'
