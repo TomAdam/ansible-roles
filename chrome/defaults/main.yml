@@ -1,4 +1,4 @@
 ---
-chrome_chromedriver_download_url: https://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip
-chrome_chromedriver_checksum: sha256:519e8f69824ab63d3f223edd19f92128007f78bfb51f878ca2a2d70c6a0f294e
-chrome_chromedriver_version: 2.38
+chrome_chromedriver_download_url: https://chromedriver.storage.googleapis.com/2.43/chromedriver_linux64.zip
+chrome_chromedriver_checksum: sha256:b3bae632f87eb32f30b72dc998514ded347ac62374dfb891d88507809d688574
+chrome_chromedriver_version: 2.43

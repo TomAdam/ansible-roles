@@ -11,16 +11,10 @@
 
 - name: Install PostgreSQL packages
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ postgres_default_packages + postgres_additional_packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-  - "postgresql-{{ postgres_version }}"
-  - "postgresql-client-{{ postgres_version }}"
-  - python-pygresql
-  - python-psycopg2
-  - "{{ postgres_additional_packages }}"
 
 - name: Configure PostgreSQL
   template:
@@ -28,12 +22,21 @@
     dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
   register: check_postgres_configure
 
+- name: Set access control
+  template:
+    src: pg_hba.conf.j2
+    dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+    owner: postgres
+    group: postgres
+    mode: 0640
+  register: check_postgres_access
+
 - name: Restart PostgreSQL
   service:
     name: postgresql.service
     enabled: yes
     state: restarted
-  when: check_postgres_configure | changed
+  when: check_postgres_configure is changed or check_postgres_access is changed
 
 - name: Create databases
   become_user: postgres
@@ -58,7 +61,7 @@
     database: "{{ item.db }}"
     roles: "{{ item.roles }}"
     privs: "{{ item.privs }}"
-    type: "{{ item.type }}"
+    type: "{{ item.type|default(omit) }}"
     objs: "{{ item.objs|default(omit) }}"
   with_items: "{{ postgres_privs }}"
 

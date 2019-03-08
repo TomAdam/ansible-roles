@@ -5,7 +5,7 @@ external_pid_file = '/var/run/postgresql/9.5-main.pid'
 
 listen_addresses = 'localhost'
 port = 5432
-max_connections = 100
+max_connections = {{ postgres_max_connections }}
 unix_socket_directories = '/var/run/postgresql'
 
 ssl = off
@@ -32,3 +32,6 @@ lc_numeric = 'en_GB.UTF-8'
 lc_time = 'en_GB.UTF-8'
 
 default_text_search_config = 'pg_catalog.english'
+
+full_page_writes = {{ postgres_full_page_writes }}
+fsync = {{ postgres_fsync }}

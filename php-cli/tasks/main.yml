@@ -8,11 +8,10 @@
 
 - name: Install PHP packages
   apt:
-    pkg: "{{ item }}"
+    pkg: "{{ php_cli_packages }}"
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items: "{{ php_cli_packages }}"
 
 - name: Install Xdebug
   apt:
