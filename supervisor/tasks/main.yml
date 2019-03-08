@@ -45,5 +45,5 @@
 # TODO: move logs to a common folder?
 - name: Reload config if changed
   command: supervisorctl update
-  when: check_configure_supervisor|changed or check_install_supervisor_configs|changed
+  when: check_configure_supervisor is changed or check_install_supervisor_configs is changed
   ignore_errors: true # log dirs may not be available yet
