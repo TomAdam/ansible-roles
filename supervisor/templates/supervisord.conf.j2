@@ -22,9 +22,9 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 serverurl=unix:///var/run/supervisor.sock
 
 {% if supervisor_crashmail_enable %}
-    [eventlistener:crashmailbatch]
-    command=crashmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject }}"
-    events=PROCESS_STATE,TICK_60
+[eventlistener:crashmailbatch]
+command=crashmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject }}"
+events=PROCESS_STATE,TICK_60
 {% endif %}
 
 [include]
