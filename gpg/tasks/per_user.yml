@@ -1,0 +1,31 @@
+---
+- become_user: "{{ gpg_user_config.user }}"
+  become: true
+  block:
+  - name: "Get user details for {{ gpg_user_config.user }}"
+    user:
+      name: "{{ gpg_user_config.user }}"
+      state: present
+    register: gpg_user_details
+
+  - name: "Set vars for user {{ gpg_user_config.user }}"
+    set_fact:
+      gpg_basedir: "{{ gpg_user_details.home }}/.gnupg"
+
+  - name: "Ensure {{ gpg_basedir }} directory exists with secure permissions"
+    file:
+      dest: "{{ gpg_basedir }}"
+      state: directory
+      mode: 0700
+
+  - name: Import private keys
+    include_tasks: private_keys.yml
+    with_items: "{{ gpg_user_config.private_keys }}"
+    loop_control:
+      loop_var: gpg_user_private_key
+
+  - name: Import public keys
+    include_tasks: public_keys.yml
+    with_items: "{{ gpg_user_config.public_keys }}"
+    loop_control:
+      loop_var: gpg_user_public_key

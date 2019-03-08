@@ -1,0 +1,27 @@
+---
+- name: "Check if private key {{ gpg_user_private_key.id }} exists"
+  command: "gpg2 --list-secret-key {{ gpg_user_private_key.id }}"
+  register: gpg_user_private_key_exists
+  failed_when: "gpg_user_private_key_exists is failed and 'No secret key' not in gpg_user_private_key_exists.stderr"
+  changed_when: "gpg_user_private_key_exists is failed and 'No secret key' in gpg_user_private_key_exists.stderr"
+
+- block:
+  - name: "Write private key {{ gpg_user_private_key.id }} to {{ gpg_basedir }}"
+    copy:
+      content: "{{ gpg_user_private_key.key|b64decode }}"
+      dest: "{{ gpg_basedir }}/{{ gpg_user_private_key.id }}"
+      mode: 0600
+    no_log: true
+
+  - name: "Import private key {{ gpg_user_private_key.id }}"
+    command: "gpg2 --batch --passphrase-fd 0 --pinentry-mode loopback --import {{ gpg_basedir }}/{{ gpg_user_private_key.id }}"
+    args:
+      stdin: "{{ gpg_user_private_key.passphrase }}"
+    no_log: true
+
+  - name: "Remove private key {{ gpg_user_private_key.id }} from {{ gpg_basedir }}"
+    file:
+      path: "{{ gpg_basedir }}/{{ gpg_user_private_key.id }}"
+      state: absent
+    no_log: true
+  when: "gpg_user_private_key_exists is changed"

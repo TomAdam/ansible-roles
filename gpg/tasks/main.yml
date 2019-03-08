@@ -6,40 +6,8 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Ensure {{ gpg_key_basedir }} config directory exists with right permissions
-  file:
-    dest: "~/{{ gpg_key_basedir }}"
-    state: directory
-    mode: 0700
-
-- name: Write private keys to {{ gpg_key_basedir }}
-  copy:
-    content: "{{ item.key|b64decode }}"
-    dest: "~/{{ gpg_key_basedir }}/{{ item.name }}"
-    mode: 0600
-  with_items: "{{ gpg_private_keys }}"
-
-- name: Import private keys
-  command: "gpg2 --batch --passphrase-fd 0 --pinentry-mode loopback --import ~/{{ gpg_key_basedir }}/{{ item.name }}"
-  args:
-    stdin: "{{ item.passphrase }}"
-  with_items: "{{ gpg_private_keys }}"
-  no_log: true
-  register: result
-  failed_when: "result is failed and 'already in secret keyring' not in result.stderr"
-
-- name: Remove private keys from {{ gpg_key_basedir }}
-  file:
-    path: "~/{{ gpg_key_basedir }}/{{ item.name }}"
-    state: absent
-  with_items: "{{ gpg_private_keys }}"
-
-- name: Import public keys
-  shell: echo "{{ item.value|b64decode }}" | gpg2 --import
-  with_dict: '{{ gpg_public_keys }}'
-  no_log: true
-
-- name: Import trust settings
-  shell: echo "{{ item }}" | gpg2 --import-ownertrust
-  with_items: '{{ gpg_trust }}'
-  no_log: true
+- name: Per-user GPG config
+  include_tasks: per_user.yml
+  with_items: "{{ gpg_config }}"
+  loop_control:
+    loop_var: gpg_user_config
