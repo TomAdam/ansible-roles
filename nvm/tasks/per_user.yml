@@ -5,6 +5,7 @@
 
   - name: Check NVM version
     command: 'bash -ic "nvm --version"'
+    # task fails when the nvm command fails or is not installed (rc 127)
     failed_when: nvm_installed_version.rc != 0 and nvm_installed_version.rc != 127
     register: nvm_installed_version
 
