@@ -10,6 +10,7 @@
 
 - name: Install Yarn
   apt:
-    name: yarn
+    pkg: yarn
+    state: present
     update_cache: yes
     cache_valid_time: 3600
