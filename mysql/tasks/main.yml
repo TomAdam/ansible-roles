@@ -6,13 +6,7 @@
 
 - name: Add MySQL repository
   apt_repository:
-    repo: "deb https://repo.mysql.com/apt/debian/ {{ ansible_distribution_release }} mysql-5.7"
-
-# this solves a repo issue
-- name: Update APT
-  apt:
-    update_cache: yes
-    cache_valid_time: 3600
+    repo: "deb https://repo.mysql.com/apt/debian/ {{ ansible_distribution_release }} mysql-{{ mysql_version }}"
 
 - name: Check if MySQL server installed
   shell: dpkg-query -W -f='${db:Status-Abbrev}' mysql-server || true
@@ -20,14 +14,10 @@
 
 - name: Install MySQL packages
   apt:
-    pkg: "{{ item }}"
+    pkg: mysql-server,mysql-client,python-mysqldb
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-  - mysql-server
-  - mysql-client
-  - python-mysqldb # required by ansible
 
 - name: Stop MySQL if fresh install
   service:
