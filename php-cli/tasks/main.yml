@@ -23,7 +23,7 @@
 
 - name: Apply PHP CLI settings
   template:
-    src: php.ini
+    src: php.ini.j2
     dest: "/etc/php/{{ php_cli_version }}/cli/php.ini"
     owner: root
     group: root
