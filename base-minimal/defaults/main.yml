@@ -1,0 +1,22 @@
+---
+system_locales:
+- "en_US.UTF-8"
+- "en_GB.UTF-8"
+system_default_locale: en_GB.UTF-8
+system_timezone: Europe/London
+system_packages: []
+base_default_system_packages:
+- ssl-cert
+- acl
+- curl
+- wget
+- vim
+- nano
+- rsync
+- locales
+- zip
+- screen
+- htop
+- apt-transport-https
+- man-db
+users: []
