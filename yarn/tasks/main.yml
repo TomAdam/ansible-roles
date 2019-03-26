@@ -1,4 +1,11 @@
 ---
+- name: Remove cmdtest
+  apt:
+    pkg: cmdtest
+    state: absent
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: Install Yarn repo key
   apt_key:
     data: "{{ lookup('file', 'yarn-repo.asc') }}"
