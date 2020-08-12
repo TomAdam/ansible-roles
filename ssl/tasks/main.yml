@@ -7,7 +7,8 @@
     group: ssl-cert
     mode: 0640
   with_items: "{{ ssl_keys }}"
-  no_log: true
+  loop_control:
+    label: "{{ item.name}}.key"
 
 - name: Install SSL certificates
   copy:
@@ -17,6 +18,8 @@
     group: root
     mode: 0644
   with_items: "{{ ssl_certs }}"
+  loop_control:
+    label: "{{ item.name }}.pem"
 
 - name: Install SSL stapling certificates
   copy:
@@ -26,6 +29,8 @@
     group: root
     mode: 0644
   with_items: "{{ ssl_stapling }}"
+  loop_control:
+    label: "{{ item.name }}.stapling.pem"
 
 - block: DH params
   - name: Create DH folder
