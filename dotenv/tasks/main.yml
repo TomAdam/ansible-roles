@@ -1,0 +1,10 @@
+- name: Create dotenv files
+  template:
+    src: .env.j2
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group|default(item.owner) }}"
+    mode: "{{ item.mode|default('0644') }}"
+  with_items: "{{ dotenv_files|default([]) }}"
+  loop_control:
+    label: "{{ item.dest }}"
