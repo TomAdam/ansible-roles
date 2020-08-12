@@ -1,0 +1,19 @@
+---
+- name: Install rsync
+  apt:
+    pkg: rsync
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Unpack rrsync
+  shell: gunzip -c /usr/share/doc/rsync/scripts/rrsync.gz > /usr/local/bin/rrsync
+  args:
+    creates: /usr/local/bin/rrsync
+
+- name: Set rrsync perms
+  file:
+    path: /usr/local/bin/rrsync
+    mode: 0755
+    owner: root
+    group: root
