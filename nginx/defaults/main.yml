@@ -6,5 +6,6 @@ nginx_modules: []
 nginx_conf: []
 nginx_snippets: []
 nginx_package: nginx-light
+nginx_server_tokens: 'off'
 
 nginx_certbot_plugin: false
