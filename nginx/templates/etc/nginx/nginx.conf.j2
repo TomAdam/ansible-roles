@@ -57,6 +57,8 @@ http {
         text/xml
         text/x-component;
 
+    server_tokens {{ nginx_server_tokens }};
+
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/sites-enabled/*;
 }
