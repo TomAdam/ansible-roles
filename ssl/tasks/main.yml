@@ -27,23 +27,26 @@
     mode: 0644
   with_items: "{{ ssl_stapling }}"
 
-- name: Create DH folder
-  file:
-    path: /etc/ssl/dh
-    state: directory
-    owner: root
-    group: ssl-cert
-    mode: 0710
+- block: DH params
+  - name: Create DH folder
+    file:
+      path: /etc/ssl/dh
+      state: directory
+      owner: root
+      group: ssl-cert
+      mode: 0710
 
-- name: Generate DH params
-  command: openssl dhparam -out /etc/ssl/dh/dhparam.pem 2048
-  args:
-    creates: /etc/ssl/dh/dhparam.pem
+  - name: Generate DH params
+    command: openssl dhparam -out /etc/ssl/dh/dhparam.pem 2048
+    args:
+      creates: /etc/ssl/dh/dhparam.pem
 
-- name: Secure DH params # secure to do this after creation due to folder perms
-  file:
-    path: /etc/ssl/dh/dhparam.pem
-    state: file
-    owner: root
-    group: ssl-cert
-    mode: 0640
+  - name: Secure DH params # secure to do this after creation due to folder perms
+    file:
+      path: /etc/ssl/dh/dhparam.pem
+      state: file
+      owner: root
+      group: ssl-cert
+      mode: 0640
+
+  when: not ssl_skip_dh
