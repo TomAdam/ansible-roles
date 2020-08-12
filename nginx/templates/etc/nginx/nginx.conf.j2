@@ -5,10 +5,7 @@
 user {{ nginx_user }};
 worker_processes auto;
 pid /run/nginx.pid;
-
-{% for module in nginx_load_modules %}
-load_module modules/{{ module }};
-{% endfor %}
+include /etc/nginx/modules-enabled/*.conf;
 
 events {
     worker_connections 768;
@@ -35,7 +32,6 @@ http {
     error_log /var/log/nginx/error.log;
 
     gzip on;
-    gzip_disable "msie6";
     gzip_vary on;
     gzip_proxied expired no-cache no-store private auth;
     gzip_comp_level 6;
