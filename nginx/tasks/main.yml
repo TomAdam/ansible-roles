@@ -56,6 +56,14 @@
   with_items: "{{ nginx_vhosts }}"
   notify: restart nginx
 
+- name: Enable modules
+  file:
+    path: "/etc/nginx/modules-enabled/{{ item.dest }}"
+    state: "{{ 'link' if item.enabled else 'absent' }}"
+    src: "{{ '/etc/nginx/modules-available/' ~ item.dest if item.enabled else omit }}"
+  with_items: "{{ nginx_modules }}"
+  notify: restart nginx
+
 - name: Create basic auth files
   copy:
     dest: "{{ item.path }}"

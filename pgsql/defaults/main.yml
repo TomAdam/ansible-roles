@@ -7,7 +7,6 @@ postgres_extensions: []
 postgres_default_packages:
 - "postgresql-{{ postgres_version }}"
 - "postgresql-client-{{ postgres_version }}"
-- python-pygresql
 - python-psycopg2
 postgres_additional_packages: []
 

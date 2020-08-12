@@ -1,6 +1,6 @@
 ######################################################################################################################################################################################################
-#ACTION		SOURCE		DEST		PROTO	DEST	SOURCE		ORIGINAL	RATE		USER/	MARK	CONNLIMIT	TIME		HEADERSSWITCH		HELPER
-#							PORT	PORT(S)		DEST		LIMIT		GROUP
+#ACTION		SOURCE		DEST		PROTO	DEST	SOURCE		ORIGINAL	RATEUSER/	MARK	CONNLIMIT	TIME		HEADERS		SWITCH		HELPER
+#                                           PORT	PORT(S)		DEST		LIMITGROUP
 {% for section in shorewall_rules %}
 ?SECTION {{ section.name }}
 {% for rule in section.rules %}
