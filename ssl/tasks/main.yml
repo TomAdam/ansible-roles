@@ -32,7 +32,9 @@
   loop_control:
     label: "{{ item.name }}.stapling.pem"
 
-- block: DH params
+- name: DH params
+  when: not ssl_skip_dh
+  block:
   - name: Create DH folder
     file:
       path: /etc/ssl/dh
@@ -53,5 +55,3 @@
       owner: root
       group: ssl-cert
       mode: 0640
-
-  when: not ssl_skip_dh
