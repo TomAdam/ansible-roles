@@ -24,6 +24,6 @@
     name: none
     fstype: swap
     opts: defaults
-    passno: 0
-    dump: 0
+    passno: "0"
+    dump: "0"
     state: present
