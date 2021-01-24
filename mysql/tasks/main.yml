@@ -10,6 +10,7 @@
 
 - name: Check if MySQL server installed
   shell: dpkg-query -W -f='${db:Status-Abbrev}' mysql-server || true
+  changed_when: false
   register: mysql_installed
 
 - name: Install MySQL packages
@@ -27,6 +28,8 @@
 
 - name: Delete InnoDB logs if fresh install # changing logfile size causes restart issue until logs deleted
   shell: rm -f /var/lib/mysql/ib_logfile[01]
+  args:
+    warn: false
   when: mysql_installed.stdout != "ii "
 
 - name: Configure
@@ -52,6 +55,9 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
     check_implicit_admin: yes
+  no_log: false
+  loop_control:
+    label: "root@{{ item }}"
   with_items:
   - 127.0.0.1
   - ::1
@@ -76,5 +82,7 @@
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
-  no_log: true
+  no_log: false
+  loop_control:
+    label: "{{ item.name }}@{{ item.host | default('localhost') }}"
   with_items: "{{ mysql_users }}"
