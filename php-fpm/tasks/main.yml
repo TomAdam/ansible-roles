@@ -16,7 +16,7 @@
 
 - name: Install Xdebug
   apt:
-    pkg: php-xdebug
+    pkg: php{{ php_fpm_version }}-xdebug
     state: present
     update_cache: yes
     cache_valid_time: 3600
