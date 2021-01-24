@@ -21,6 +21,12 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Add backports repo
+  apt_repository:
+    repo: "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main"
+    state: present
+    update_cache: yes
+
 - name: Install system packages
   apt:
     pkg: "{{ base_default_system_packages + system_packages }}"
@@ -32,7 +38,7 @@
   locale_gen:
     name: "{{ item }}"
     state: present
-  with_items: "{{system_locales}}"
+  with_items: "{{ system_locales }}"
 
 - name: Set default locale
   template:
@@ -100,6 +106,14 @@
   loop_control:
     label: "{{ item.0.name }} - {{ item.1 }}"
 
+- name: Install openssh from backports
+  apt:
+    pkg: openssh-server
+    default_release: "{{ ansible_distribution_release }}-backports"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: Configure sshd
   template:
     src: etc/ssh/sshd_config.j2
@@ -109,11 +123,6 @@
     mode: 0644
     validate: "sshd -t -f %s"
   register: sshd_status
-
-- name: Prune moduli
-  shell: awk '$5 > 2000' /etc/ssh/moduli > /etc/ssh/moduli_new && (cmp --silent /etc/ssh/moduli /etc/ssh/moduli_new && echo "moduli identical" || true) && mv /etc/ssh/moduli_new /etc/ssh/moduli
-  register: check_pruned_moduli
-  changed_when: "'moduli identical' not in check_pruned_moduli.stdout"
 
 - name: Add system known hosts
   lineinfile:
