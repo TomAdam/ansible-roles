@@ -4,3 +4,4 @@
     name: vagrant
     groups: ssh-users
     append: yes
+    password: '*'
