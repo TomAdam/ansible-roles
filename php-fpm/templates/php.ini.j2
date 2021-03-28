@@ -181,9 +181,9 @@ openssl.cafile = "{{ php_fpm_openssl_cafile }}"
 
 {% if php_fpm_xdebug %}
 [xdebug]
-xdebug.remote_enable = {{ php_fpm_xdebug_remote_enable }}
-xdebug.remote_host = {{ php_fpm_xdebug_remote_host }}
-xdebug.remote_autostart = {{ php_fpm_xdebug_remote_autostart }}
+xdebug.mode=debug,develop
+xdebug.client_host = {{ php_fpm_xdebug_client_host }}
+xdebug.start_with_request = {{ php_fpm_xdebug_start_with_request }}
 xdebug.idekey = {{ php_fpm_xdebug_idekey }}
 xdebug.max_nesting_level = {{ php_fpm_xdebug_max_nesting_level }}
 {% endif %}
