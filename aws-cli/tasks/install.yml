@@ -1,20 +1,23 @@
 ---
-- name: Install aws-cli
-  pip:
-    name: awscli
-    extra_args: --upgrade --user
-    state: present
+- become_user: "{{ aws_cli_user_config.user }}"
+  become: true
+  block:
+  - name: Install aws-cli
+    pip:
+      name: awscli
+      extra_args: --upgrade --user
+      state: present
 
-- name: Create config dir
-  file:
-    state: directory
-    path: "~/.aws"
+  - name: Create config dir
+    file:
+      state: directory
+      path: "~/.aws"
 
-- name: Configure aws-cli
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: 0600
-  with_items:
-  - { src: config.j2, dest: "~/.aws/config" }
-  - { src: credentials.j2, dest: "~/.aws/credentials" }
+  - name: Configure aws-cli
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: 0600
+    with_items:
+    - { src: config.j2, dest: "~/.aws/config" }
+    - { src: credentials.j2, dest: "~/.aws/credentials" }
