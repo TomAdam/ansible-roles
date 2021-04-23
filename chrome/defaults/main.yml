@@ -1,6 +1,6 @@
 ---
 chrome_install_chromedriver: true
-chrome_chromedriver_download_url: https://chromedriver.storage.googleapis.com/89.0.4389.23/chromedriver_linux64.zip
+chrome_chromedriver_download_url: https://chromedriver.storage.googleapis.com/90.0.4430.24/chromedriver_linux64.zip
 # checksum is for the zip not the content
-chrome_chromedriver_checksum: sha256:19d4e662b62f62203d24be0578e6dd738c2a4e94febcd05a05e51cda43b73199
-chrome_chromedriver_version: 89.0.4389.23
+chrome_chromedriver_checksum: sha256:474e9832e2f592f30d5b3260a17c479e50c46dade2c062316af13da2735fd12f
+chrome_chromedriver_version: 90.0.4430.24
