@@ -1,11 +1,14 @@
 ---
-nginx_user: www-data
-nginx_vhosts: []
+nginx_user: nginx
 nginx_basic_auth: []
-nginx_modules: []
+
 nginx_conf: []
+nginx_vhosts: []
+nginx_modules: []
 nginx_snippets: []
-nginx_package: nginx-light
+
 nginx_server_tokens: 'off'
 
 nginx_certbot_plugin: false
+
+nginx_client_max_body_size: 8m

@@ -1,8 +1,17 @@
 ---
+- name: Add repository key
+  apt_key:
+    data: "{{ lookup('file', 'repo.asc') }}"
+    state: present
+
+- name: Add upstream repository
+  apt_repository:
+    repo: deb https://nginx.org/packages/debian {{ ansible_distribution_release }} nginx
+
 # passlib for basic auth
 - name: Install Nginx
   apt:
-    pkg: "{{ nginx_package }},python-passlib"
+    pkg: "nginx,python3-passlib,ssl-cert"
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -10,7 +19,6 @@
 - name: Install certbot plugin
   apt:
     name: python3-certbot-nginx
-    default_release: '{{ ansible_distribution_release }}-backports'
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -18,51 +26,52 @@
 
 - name: Configure Nginx
   template:
-    src: etc/nginx/nginx.conf.j2
+    src: nginx.conf.j2
     dest: /etc/nginx/nginx.conf
-  notify: restart nginx
+  notify: reload nginx
 
-- name: Disable default Nginx site
+- name: Remove default Nginx site
   file:
-    path: /etc/nginx/sites-enabled/default
+    path: /etc/nginx/conf.d/default.conf
     state: absent
-  notify: restart nginx
+  notify: reload nginx
 
 - name: Add web user to ssl-cert group
   user:
     name: "{{ nginx_user }}"
     append: yes
     groups: ssl-cert
-  notify: restart nginx
+  notify: reload nginx
+
+- name: Create directories
+  file:
+    path: /etc/nginx/{{ item }}
+    state: directory
+  with_items:
+  - sites-available
+  - sites-enabled
+  - snippets
 
 - name: Install conf
   template:
     src: "templates/nginx/conf/{{ item.src }}"
     dest: "/etc/nginx/conf.d/{{ item.dest }}"
   with_items: "{{ nginx_conf }}"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: Install snippets
   template:
     src: "templates/nginx/snippets/{{ item.src }}"
     dest: "/etc/nginx/snippets/{{ item.dest }}"
   with_items: "{{ nginx_snippets }}"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: Install vhosts
   template:
     src: "templates/nginx/vhosts/{{ item.src }}"
     dest: "/etc/nginx/sites-available/{{ item.dest }}"
   with_items: "{{ nginx_vhosts }}"
-  notify: restart nginx
-
-- name: Enable modules
-  file:
-    path: "/etc/nginx/modules-enabled/{{ item.dest }}"
-    state: "{{ 'link' if item.enabled else 'absent' }}"
-    src: "{{ '/etc/nginx/modules-available/' ~ item.dest if item.enabled else omit }}"
-  with_items: "{{ nginx_modules }}"
-  notify: restart nginx
+  notify: reload nginx
 
 - name: Create basic auth files
   copy:
@@ -72,7 +81,8 @@
     content: ""
     force: false
   with_items: "{{ nginx_basic_auth }}"
-  no_log: true
+  loop_control:
+    label: "{{ item.path }}"
 
 - name: Write basic auth passwords
   htpasswd:
@@ -81,8 +91,9 @@
     password: "{{ item.password }}"
     path: "{{ item.path }}"
   with_items: "{{ nginx_basic_auth }}"
-  notify: restart nginx
-  no_log: true
+  notify: reload nginx
+  loop_control:
+    label: "{{ item.path }}"
 
 - name: Enable vhosts
   file:
@@ -90,4 +101,4 @@
     state: "{{ 'link' if item.enabled else 'absent' }}"
     src: "{{ '/etc/nginx/sites-available/' ~ item.dest if item.enabled else omit }}"
   with_items: "{{ nginx_vhosts }}"
-  notify: restart nginx
+  notify: reload nginx
