@@ -21,6 +21,7 @@ php_fpm_opcache_revalidate_freq: 0
 php_fpm_curl_cainfo:
 php_fpm_openssl_cafile:
 php_fpm_xdebug: false
+php_fpm_xdebug_client_host: "{{ php_xdebug_client_host|default('') }}"
 php_fpm_xdebug_start_with_request: 'yes'
 php_fpm_xdebug_idekey: fpm
 php_fpm_xdebug_max_nesting_level: 500
