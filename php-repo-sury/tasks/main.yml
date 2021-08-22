@@ -6,10 +6,7 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Add PHP repo key
-  apt_key:
-    data: "{{ lookup('file', 'php-sury-repo.asc') }}"
-    state: present
+- import_tasks: add-key.yml
 
 - name: Add PHP repository
   apt_repository:
