@@ -1,0 +1,8 @@
+---
+- name: update supervisor
+  command: supervisorctl update
+
+- name: restart supervisor
+  systemd:
+    name: supervisor.service
+    state: restarted

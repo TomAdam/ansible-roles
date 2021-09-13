@@ -30,7 +30,7 @@
     owner: root
     group: "{{ supervisor_group }}"
     mode: 0644
-  register: check_configure_supervisor
+  notify: restart supervisor
 
 - name: Install supervisor configs
   template:
@@ -40,10 +40,4 @@
     group: "{{ supervisor_group }}"
     mode: 0644
   with_items: "{{ supervisor_configs }}"
-  register: check_install_supervisor_configs
-
-# TODO: move logs to a common folder?
-- name: Reload config if changed
-  command: supervisorctl update
-  when: check_configure_supervisor is changed or check_install_supervisor_configs is changed
-  ignore_errors: true # log dirs may not be available yet
+  notify: update supervisor
