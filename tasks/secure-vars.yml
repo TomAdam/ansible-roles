@@ -1,0 +1,16 @@
+---
+- name: Check for secure vars files
+  become: false
+  local_action:
+    module: stat
+    path: "secure_vars/{{ item }}.yml"
+  with_items: "{{ group_names }}"
+  register: secure_vars_group_files
+
+- name: Import secure vars
+  include_vars:
+    file: "{{ item.stat.path }}"
+  when: item.stat.exists
+  with_items: "{{ secure_vars_group_files.results }}"
+  loop_control:
+    label: "{{ item.stat.path if item.stat.exists else 'N/A' }}"
