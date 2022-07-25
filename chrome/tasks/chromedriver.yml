@@ -1,32 +1,36 @@
 ---
-- name: Check existing chromedriver version
+- name: Get chrome version
+  command: /usr/bin/google-chrome --version
+  changed_when: false
+  register: chrome_version_result
+
+- name: Get chromedriver version
   command: /usr/local/bin/chromedriver --version
-  changed_when: chrome_chromedriver_version_result is failed or chrome_chromedriver_version|string not in chrome_chromedriver_version_result.stdout
+  changed_when: false
   failed_when: chrome_chromedriver_version_result.rc not in [0, 2]
   register: chrome_chromedriver_version_result
 
-- block:
-  - name: Get temporary path for chromedriver download
-    tempfile:
-      state: file
-      suffix: .chromedriver.zip
-    register: chrome_chromedriver_download_path
+- name: Get chrome and chromedriver major versions
+  set_fact:
+    chrome_major_version: "{{ chrome_version_result.stdout|regex_search('(\\d+)\\.\\d+\\.\\d+\\.\\d+', '\\1')|first }}"
+    chrome_chromedriver_major_version: "{{ chrome_chromedriver_version_result.stdout|default('0.0.0.0')|regex_search('(\\d+)\\.\\d+\\.\\d+\\.\\d+', '\\1')|first }}"
 
-  - name: Download chromedriver
-    get_url:
-      url: "{{ chrome_chromedriver_download_url }}"
-      dest: "{{ chrome_chromedriver_download_path.path }}"
-      owner: root
-      group: root
-      mode: 0600
-      checksum: "{{ chrome_chromedriver_checksum }}"
+- block:
+  - name: Get matching chromedriver version for chrome
+    uri:
+      url: "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_{{ chrome_major_version }}"
+      return_content: yes
+    register: chrome_chromedriver_version_response
+    changed_when: false
 
   - name: Unpack chromedriver
     unarchive:
-      src: "{{ chrome_chromedriver_download_path.path }}"
+      src: "{{ chrome_chromedriver_download_url }}"
       dest: /usr/local/bin
       remote_src: yes
       owner: root
       group: root
       mode: 0755
-  when: chrome_chromedriver_version_result is changed
+    vars:
+      chrome_chromedriver_version: "{{ chrome_chromedriver_version_response.content }}"
+  when: chrome_chromedriver_major_version != chrome_major_version
