@@ -1,0 +1,12 @@
+---
+- name: Install GPG
+  apt:
+    pkg: gpg
+    state: present
+    update_cache: no
+
+# Base path is ansible folder
+- name: Add key
+  apt_key:
+      data: "{{ lookup('file', key_path) }}"
+      state: present
