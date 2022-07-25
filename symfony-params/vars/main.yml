@@ -1,0 +1,2 @@
+---
+symfony_params_macos: "{{ vagrant_host_os|default('none') == 'darwin' }}"
