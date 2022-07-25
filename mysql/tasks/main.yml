@@ -15,7 +15,7 @@
 
 - name: Install MySQL packages
   apt:
-    pkg: mysql-server,mysql-client,python-mysqldb
+    pkg: mysql-server,mysql-client,python3-mysqldb
     state: present
     update_cache: yes
     cache_valid_time: 3600
