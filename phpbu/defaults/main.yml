@@ -1,0 +1,16 @@
+---
+phpbu_enable: true
+
+# v6.0.15
+phpbu_download_url: https://github.com/sebastianfeldmann/phpbu/releases/download/6.0.15/phpbu-6.0.15.phar
+phpbu_download_checksum: 76cf6a5592ea1da723b4d7fde494ce6443ff2190cdfeac8f93d05f62afbdc666
+phpbu_config_schema_url: https://schema.phpbu.de/6.0/phpbu.xsd
+
+phpbu_cron_enable: true
+
+phpbu_log_dir: /var/log/phpbu
+phpbu_lib_dir: /var/lib/phpbu
+phpbu_backup_dir: '{{ phpbu_lib_dir }}/backups'
+
+# base64 encoded ed25519 private key, use `base64 -w0 <key file>`
+phpbu_private_key: ~

@@ -1,0 +1,76 @@
+---
+- block:
+  - name: Install dependencies
+    apt:
+      pkg: libxml2-utils
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: Create user
+    user:
+      name: phpbu
+      password: '*'
+      system: yes
+      shell: /bin/false
+
+  - name: Create directories
+    file:
+      path: '{{ item.path }}'
+      owner: root
+      group: phpbu
+      mode: '{{ item.mode }}'
+      state: directory
+    with_items:
+    - { path: '{{ phpbu_lib_dir }}', mode: '0775' }
+    - { path: '{{ phpbu_backup_dir }}', mode: '0770' }
+    - { path: '{{ phpbu_log_dir }}', mode: '0770' }
+    - { path: '/home/phpbu/.ssh', mode: '0700' }
+
+  - name: Add private key to phpbu user
+    copy:
+      content: "{{ phpbu_private_key|b64decode }}"
+      dest: /home/phpbu/.ssh/id_ed25519
+      owner: phpbu
+      group: phpbu
+      mode: 0600
+    when: phpbu_private_key != None
+
+  - name: Download PHPBU
+    get_url:
+      url: '{{ phpbu_download_url }}'
+      checksum: 'sha256:{{ phpbu_download_checksum }}'
+      dest: /usr/local/bin/phpbu
+      owner: root
+      group: root
+      mode: '0755'
+
+  - name: Download config XML schema
+    get_url:
+      url: '{{ phpbu_config_schema_url }}'
+      dest: '{{ phpbu_lib_dir }}/phpbu.xsd'
+      owner: root
+      group: phpbu
+      mode: '0664'
+
+  - name: Configure
+    template:
+      src: templates/phpbu/phpbu.xml
+      dest: /etc/phpbu.xml
+      owner: root
+      group: phpbu
+      mode: '0640'
+      validate: 'xmllint --noout --schema {{ phpbu_lib_dir }}/phpbu.xsd %s'
+
+  - name: "{{ phpbu_cron_enable|ternary('Install', 'Remove') }} cron"
+    cron:
+      user: phpbu
+      minute: '{{ phpbu_cron_time.0 }}'
+      hour: '{{ phpbu_cron_time.1 }}'
+      day: '{{ phpbu_cron_time.2 }}'
+      month: '{{ phpbu_cron_time.3 }}'
+      weekday: '{{ phpbu_cron_time.4 }}'
+      state: "{{ phpbu_cron_enable|ternary('present', 'absent') }}"
+      job: '/usr/local/bin/phpbu --configuration=/etc/phpbu.xml'
+      name: PHPBU Database Backup
+  when: phpbu_enable
