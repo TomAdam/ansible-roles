@@ -28,7 +28,7 @@ log_errors_max_len = 1024
 ignore_repeated_errors = Off
 ignore_repeated_source = Off
 report_memleaks = On
-track_errors = {{ php_fpm_track_errors }}
+track_errors = Off
 html_errors = On
 variables_order = "GPCS"
 request_order = "GP"
@@ -173,17 +173,11 @@ opcache.file_cache_fallback = 1
 opcache.validate_timestamps = {{ php_fpm_opcache_validate_timestamps }}
 opcache.revalidate_freq = {{ php_fpm_opcache_revalidate_freq }}
 
-[curl]
-curl.cainfo = "{{ php_fpm_curl_cainfo }}"
-
-[openssl]
-openssl.cafile = "{{ php_fpm_openssl_cafile }}"
-
 {% if php_fpm_xdebug %}
 [xdebug]
-xdebug.mode=debug,develop
-xdebug.client_host = {{ php_fpm_xdebug_client_host }}
-xdebug.start_with_request = {{ php_fpm_xdebug_start_with_request }}
+xdebug.remote_enable = {{ php_fpm_xdebug_remote_enable }}
+xdebug.remote_host = {{ php_fpm_xdebug_remote_host }}
+xdebug.remote_autostart = {{ php_fpm_xdebug_remote_autostart }}
 xdebug.idekey = {{ php_fpm_xdebug_idekey }}
 xdebug.max_nesting_level = {{ php_fpm_xdebug_max_nesting_level }}
 {% endif %}

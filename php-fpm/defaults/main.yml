@@ -8,7 +8,6 @@ php_fpm_max_execution_time: 30
 php_fpm_error_reporting: E_ALL & ~E_DEPRECATED & ~E_STRICT
 php_fpm_display_errors: Off
 php_fpm_display_startup_errors: Off
-php_fpm_track_errors: Off
 php_fpm_post_max_size: 8M
 php_fpm_upload_max_filesize: 8M
 php_fpm_mysqlnd_collect_statistics: Off
@@ -18,12 +17,15 @@ php_fpm_opcache_file_cache: ~
 php_fpm_opcache_file_cache_only: 0
 php_fpm_opcache_validate_timestamps: 0
 php_fpm_opcache_revalidate_freq: 0
-php_fpm_curl_cainfo:
-php_fpm_openssl_cafile:
 php_fpm_xdebug: false
+php_fpm_xdebug_remote_enable: true
+php_fpm_xdebug_remote_host: "{{ php_fpm_xdebug_client_host }}"
+php_fpm_xdebug_remote_autostart: true
 php_fpm_xdebug_client_host: "{{ php_xdebug_client_host|default('') }}"
 php_fpm_xdebug_start_with_request: 'yes'
 php_fpm_xdebug_idekey: fpm
 php_fpm_xdebug_max_nesting_level: 500
 php_fpm_pools: []
 php_fpm_packages: "{{ php_packages|default([]) }}"
+php_fpm_zend_ignore_args: On
+php_fpm_zend_assertions: -1

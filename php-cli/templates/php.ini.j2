@@ -27,7 +27,7 @@ error_log = {{ php_cli_error_log }}
 ignore_repeated_errors = Off
 ignore_repeated_source = Off
 report_memleaks = On
-track_errors = {{ php_cli_track_errors }}
+track_errors = Off
 html_errors = On
 variables_order = "GPCS"
 request_order = "GP"
@@ -125,29 +125,14 @@ soap.wsdl_cache_limit = 5
 ldap.max_links = -1
 
 [opcache]
-; TODO: figure out segfault issue with file cache
 opcache.enable = 0
 opcache.enable_cli = 0
-;opcache.memory_consumption = 64
-;opcache.interned_strings_buffer = 4
-;opcache.max_accelerated_files = 100000
-;opcache.save_comments = 1
-;opcache.fast_shutdown = 1
-;opcache.file_cache = "{{ php_cli_opcache_file_cache }}"
-;opcache.file_cache_only = {{ php_cli_opcache_file_cache_only }}
-;opcache.file_cache_consistency_checks = 1
-
-[curl]
-curl.cainfo = "{{ php_cli_curl_cainfo }}"
-
-[openssl]
-openssl.cafile = "{{ php_cli_openssl_cafile }}"
 
 {% if php_cli_xdebug %}
 [xdebug]
-xdebug.mode=debug,develop
-xdebug.client_host = {{ php_cli_xdebug_client_host }}
-xdebug.start_with_request = "trigger"
+xdebug.remote_enable = {{ php_cli_xdebug_remote_enable }}
+xdebug.remote_host = {{ php_cli_xdebug_remote_host }}
+xdebug.remote_autostart = {{ php_cli_xdebug_remote_autostart }}
 xdebug.idekey = {{ php_cli_xdebug_idekey }}
 xdebug.max_nesting_level = {{ php_cli_xdebug_max_nesting_level }}
 {% endif %}
