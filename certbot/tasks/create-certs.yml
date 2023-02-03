@@ -9,11 +9,11 @@
   when: not certbot_certs_item_stat.stat.exists
 
 - name: Patch standalone authentication to Nginx
-  replace:
+  lineinfile:
     path: '/etc/letsencrypt/renewal/{{ certbot_certs_item.domains | first }}.conf'
-    regexp: '{{ item.regexp }}'
-    replace: '{{ item.replace }}'
+    search_string: '{{ item.search }}'
+    line: '{{ item.replace }}'
+    insertafter: '\[renewalparams\]'
   with_items:
-  - {regexp: 'authenticator = standalone', replace: 'authenticator = nginx'}
-  - {regexp: 'installer = None', replace: 'installer = nginx'}
-  when: certbot_mode == 'standalone'
+  - {search: 'authenticator = standalone', replace: 'authenticator = nginx'}
+  - {search: 'installer = None', replace: 'installer = nginx'}
