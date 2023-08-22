@@ -58,7 +58,7 @@ StreamLocalBindMask 0177
 StreamLocalBindUnlink no
 StrictModes yes
 {% if base_ssh_allow_sftp %}
-Subsystem sftp /usr/lib/openssh/sftp-server
+Subsystem sftp internal-sftp
 {% endif %}
 SyslogFacility AUTH
 TCPKeepAlive no
