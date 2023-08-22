@@ -1,0 +1,20 @@
+---
+- import_tasks: add-key.yml
+
+- name: Add repository
+  apt_repository:
+    repo: deb https://repos.insights.digitalocean.com/apt/do-agent main main
+    filename: droplet-agent
+
+- name: Install agent
+  apt:
+    pkg: do-agent
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Ensure agent is started and enabled
+  systemd:
+    name: do-agent
+    enabled: true
+    state: started
