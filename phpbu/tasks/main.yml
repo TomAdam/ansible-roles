@@ -36,22 +36,44 @@
       mode: 0600
     when: phpbu_private_key != None
 
-  - name: Download PHPBU
-    get_url:
-      url: '{{ phpbu_download_url }}'
-      checksum: 'sha256:{{ phpbu_download_checksum }}'
-      dest: /usr/local/bin/phpbu
-      owner: root
-      group: root
-      mode: '0755'
+  - name: Check for git folder in lib dir
+    stat:
+      path: '{{ phpbu_lib_dir }}/.git'
+    register: phpbu_git_folder
 
-  - name: Download config XML schema
-    get_url:
-      url: '{{ phpbu_config_schema_url }}'
-      dest: '{{ phpbu_lib_dir }}/phpbu.xsd'
-      owner: root
-      group: phpbu
-      mode: '0664'
+  - name: Clean if no git folder
+    file:
+      path: '{{ phpbu_lib_dir }}'
+      state: absent
+    when: not phpbu_git_folder.stat.exists
+
+  - name: Clone PHPBU repo
+    git:
+      repo: '{{ phpbu_repo_url }}'
+      dest: '{{ phpbu_lib_dir }}'
+      version: '{{ phpbu_repo_version }}'
+      force: yes
+      update: yes
+      depth: 1
+
+  - name: Install dependencies
+    composer:
+      command: install
+      working_dir: '{{ phpbu_lib_dir }}'
+      no_dev: no
+      no_scripts: yes
+      no_plugins: yes
+      prefer_dist: yes
+      optimize_autoloader: yes
+    environment:
+      COMPOSER_ALLOW_SUPERUSER: 1
+
+  - name: Symlink phpbu
+    file:
+      src: '{{ phpbu_lib_dir }}/phpbu'
+      dest: /usr/local/bin/phpbu
+      state: link
+      force: yes
 
   - name: Configure
     template:

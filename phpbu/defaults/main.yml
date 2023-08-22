@@ -1,10 +1,8 @@
 ---
 phpbu_enable: true
 
-# v6.0.15
-phpbu_download_url: https://github.com/sebastianfeldmann/phpbu/releases/download/6.0.15/phpbu-6.0.15.phar
-phpbu_download_checksum: 76cf6a5592ea1da723b4d7fde494ce6443ff2190cdfeac8f93d05f62afbdc666
-phpbu_config_schema_url: https://schema.phpbu.de/6.0/phpbu.xsd
+phpbu_repo_url: https://github.com/sebastianfeldmann/phpbu.git
+phpbu_repo_version: d159225835d45a661b85f5514ff5099cb6895ba1
 
 phpbu_cron_enable: true
 
