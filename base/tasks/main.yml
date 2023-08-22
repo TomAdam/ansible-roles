@@ -65,6 +65,12 @@
   - .bashrc
   - .profile
 
+- name: Use full hostname in prompt
+  replace:
+    regexp: '^(.*PS1.*)\\h(.*)'
+    replace: '\g<1>\\H\g<2>'
+    path: "/etc/skel/.bashrc"
+
 - name: Add ssh user groups
   group:
     name: "{{ item }}"

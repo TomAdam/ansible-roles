@@ -1,0 +1,10 @@
+---
+- name: Use full hostname in prompt
+  replace:
+    regexp: '^(.*PS1.*)\\h(.*)'
+    replace: '\g<1>\\H\g<2>'
+    path: "/home/{{ item.name }}/.bashrc"
+  with_items:
+  - "{{ default_users + users }}"
+  loop_control:
+    label: "/home/{{ item.name }}/.bashrc"
