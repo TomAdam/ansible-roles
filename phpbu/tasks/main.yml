@@ -17,15 +17,15 @@
   - name: Create directories
     file:
       path: '{{ item.path }}'
-      owner: root
+      owner: '{{ item.owner }}'
       group: phpbu
       mode: '{{ item.mode }}'
       state: directory
     with_items:
-    - { path: '{{ phpbu_lib_dir }}', mode: '0775' }
-    - { path: '{{ phpbu_backup_dir }}', mode: '0770' }
-    - { path: '{{ phpbu_log_dir }}', mode: '0770' }
-    - { path: '/home/phpbu/.ssh', mode: '0700' }
+    - { path: '{{ phpbu_lib_dir }}', mode: '0775' , owner: 'root'}
+    - { path: '{{ phpbu_backup_dir }}', mode: '0770' , owner: 'root'}
+    - { path: '{{ phpbu_log_dir }}', mode: '0770', owner: 'root' }
+    - { path: '/home/phpbu/.ssh', mode: '0700', owner: 'phpbu' }
 
   - name: Add private key to phpbu user
     copy:
