@@ -2,6 +2,7 @@
 - name: Install git
   apt:
     pkg: git
+    default_release: "{{ ansible_distribution_release }}-backports"
     state: present
     update_cache: yes
     cache_valid_time: 3600
