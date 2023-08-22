@@ -23,7 +23,7 @@
 
 - name: Add backports repo
   apt_repository:
-    repo: "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main"
+    repo: "deb https://deb.debian.org/debian {{ ansible_distribution_release }}-backports main"
     state: present
     update_cache: yes
 
@@ -131,7 +131,7 @@
     dest: "/etc/profile.d/{{ item.dest }}"
     owner: root
     group: root
-    mode: "0644"
+    mode: 0644
   with_items: "{{ base_profile_config }}"
 
 - include_tasks: vagrant.yml
