@@ -1,0 +1,13 @@
+---
+- name: Check existing stripe version
+  command: /usr/local/bin/stripe --version
+  changed_when: stripe_cli_version_result is failed or stripe_cli_version|string not in stripe_cli_version_result.stdout
+  failed_when: stripe_cli_version_result.rc not in [0, 2]
+  register: stripe_cli_version_result
+
+- name: Install stripe-cli
+  apt:
+    deb: "https://github.com/stripe/stripe-cli/releases/download/v{{ stripe_cli_version }}/stripe_{{ stripe_cli_version }}_linux_amd64.deb"
+    update_cache: yes
+    cache_valid_time: 3600
+  when: stripe_cli_version_result is changed
