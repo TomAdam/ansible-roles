@@ -1,0 +1,9 @@
+---
+- name: "Remove PHP {{ php_remove_version }} packages"
+  apt:
+    pkg: "php{{ php_remove_version }}-*"
+    state: absent
+    purge: true
+    update_cache: yes
+    cache_valid_time: 3600
+  ignore_errors: true
