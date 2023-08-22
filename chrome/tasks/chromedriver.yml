@@ -10,27 +10,37 @@
   failed_when: chrome_chromedriver_version_result.rc not in [0, 2]
   register: chrome_chromedriver_version_result
 
-- name: Get chrome and chromedriver major versions
+- name: Process chrome versions
   set_fact:
+    chrome_version: "{{ chrome_version_result.stdout|regex_search('(\\d+\\.\\d+\\.\\d+\\.\\d+)', '\\1')|first }}"
     chrome_major_version: "{{ chrome_version_result.stdout|regex_search('(\\d+)\\.\\d+\\.\\d+\\.\\d+', '\\1')|first }}"
+    chrome_chromedriver_major_version: 0
+
+- name: Get chromedriver major versions
+  set_fact:
     chrome_chromedriver_major_version: "{{ chrome_chromedriver_version_result.stdout|default('0.0.0.0')|regex_search('(\\d+)\\.\\d+\\.\\d+\\.\\d+', '\\1')|first }}"
+  when: chrome_chromedriver_version_result.rc == 0
 
 - block:
-  - name: Get matching chromedriver version for chrome
-    uri:
-      url: "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_{{ chrome_major_version }}"
-      return_content: yes
-    register: chrome_chromedriver_version_response
-    changed_when: false
-
   - name: Unpack chromedriver
     unarchive:
       src: "{{ chrome_chromedriver_download_url }}"
-      dest: /usr/local/bin
+      dest: /tmp
       remote_src: yes
+      include: chromedriver-linux64/chromedriver
+
+  - name: Install chromedriver
+    copy:
+      src: /tmp/chromedriver-linux64/chromedriver
+      dest: /usr/local/bin/chromedriver
       owner: root
       group: root
       mode: 0755
-    vars:
-      chrome_chromedriver_version: "{{ chrome_chromedriver_version_response.content }}"
+      remote_src: yes
+
+  - name: Remove chromedriver temp files
+    file:
+      path: /tmp/chromedriver-linux64
+      state: absent
+
   when: chrome_chromedriver_major_version != chrome_major_version
