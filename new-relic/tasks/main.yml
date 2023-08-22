@@ -1,0 +1,26 @@
+---
+- name: Install New Relic repo key
+  apt_key:
+    data: "{{ lookup('file', 'newrelic-repo.asc') }}"
+    state: present
+
+- name: Add New Relic repo
+  apt_repository:
+    repo: "deb https://apt.newrelic.com/debian/ newrelic non-free"
+
+- name: Install New Relic
+  apt:
+    pkg: newrelic-php5
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  notify: restart php-fpm
+
+- name: Apply settings
+  template:
+    src: "newrelic.ini.j2"
+    dest: "/etc/php/{{ php_version }}/mods-available/newrelic.ini"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart php-fpm

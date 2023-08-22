@@ -1,0 +1,4 @@
+---
+newrelic_enable: false
+newrelic_browser_auto_instrument: false
+newrelic_distributed_tracing_enabled: true
