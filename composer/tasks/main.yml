@@ -10,7 +10,6 @@
   shell: curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
   args:
     creates: /usr/local/bin/composer
-    warn: no
   register: composer_install
 
 - name: Update Composer to latest version

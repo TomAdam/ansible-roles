@@ -28,8 +28,6 @@
 
 - name: Delete InnoDB logs if fresh install # changing logfile size causes restart issue until logs deleted
   shell: rm -f /var/lib/mysql/ib_logfile[01]
-  args:
-    warn: false
   when: mysql_installed.stdout != "ii "
 
 - name: Configure
