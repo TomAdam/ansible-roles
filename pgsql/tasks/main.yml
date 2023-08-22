@@ -67,7 +67,7 @@
 
 - name: Enable extensions
   become_user: postgres
-  postgresql_ext:
+  community.postgresql.postgresql_ext:
     name: "{{ item.name }}"
     db: "{{ item.db }}"
   with_items: "{{ postgres_extensions }}"

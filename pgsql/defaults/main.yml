@@ -7,7 +7,7 @@ postgres_extensions: []
 postgres_default_packages:
 - "postgresql-{{ postgres_version }}"
 - "postgresql-client-{{ postgres_version }}"
-- python-psycopg2
+- python3-psycopg2
 postgres_additional_packages: []
 
 postgres_shared_buffers: 128MB
