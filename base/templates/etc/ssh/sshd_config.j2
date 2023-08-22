@@ -12,7 +12,7 @@ MACs umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.
 
 AllowAgentForwarding yes
 AllowGroups ssh-users {{ ssh_extra_user_groups | join(' ') }}
-AllowTcpForwarding no
+AllowTcpForwarding {{ 'yes' if ssh_allow_tcp_forwarding else 'no' }}
 AllowStreamLocalForwarding no
 AuthorizedKeysFile %h/.ssh/authorized_keys
 Banner none

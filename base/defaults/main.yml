@@ -14,6 +14,7 @@ vagrant: false
 known_hosts: []
 ssh_extra_user_groups: []
 ssh_extra_conf_files: []
+ssh_allow_tcp_forwarding: false
 base_default_system_packages:
 - ssl-cert
 - acl
