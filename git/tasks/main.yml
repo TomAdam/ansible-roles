@@ -16,3 +16,15 @@
     group: root
     mode: 0644
   with_items: "{{git_known_hosts}}"
+
+- name: Rewrite deprecated git protocol
+  blockinfile:
+    path: /etc/gitconfig
+    block: |
+      [url "https://"]
+        insteadOf = git://
+    create: yes
+    owner: root
+    group: root
+    mode: '0644'
+  when: git_rewrite_deprecated_protocol
