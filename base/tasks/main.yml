@@ -50,21 +50,6 @@
     name: "{{ system_timezone }}"
   notify: restart cron
 
-- name: Set adduser dir mode
-  lineinfile:
-    regexp: "^DIR_MODE="
-    line: "DIR_MODE=0750"
-    dest: /etc/adduser.conf
-
-- name: Change skel permissions
-  file:
-    path: /etc/skel/{{ item }}
-    mode: o-r
-  with_items:
-  - .bash_logout
-  - .bashrc
-  - .profile
-
 - name: Use full hostname in prompt
   replace:
     regexp: '^(.*PS1.*)\\h(.*)'
