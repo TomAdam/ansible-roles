@@ -1,4 +1,0 @@
----
-# { src: <template>, dest: <dest filename> }
-# Note that dest must not contain a period or end in a ~ otherwise it will be ignored by sudo
-sudo_additional_config: []
