@@ -10,18 +10,18 @@ postgres_default_packages:
 - python3-psycopg2
 postgres_additional_packages: []
 
-postgres_shared_buffers: 128MB
-postgres_effective_cache_size: 1GB
-postgres_checkpoint_completion_target: 0.9
+# Memory assumed at 2GB
+postgres_shared_buffers: 512MB # 1/4 ram
+postgres_effective_cache_size: 1GB # 1/2 ram
 postgres_max_connections: 100
 
-# The following 2 options can cause irretrievable data corruption on a system crash. Only change the value to off when
-# you don't care about the data, e.g. in a local env.
-postgres_full_page_writes: on
-postgres_fsync: on
+# The following option can cause unrecoverable data corruption on a system crash but results in a large speed increase.
+# Only set to false if data is disposable.
+postgres_risky_fast: false
+postgres_full_page_writes: "{{ 'off' if postgres_risky_fast else 'on' }}"
+postgres_synchronous_commit: "{{ 'off' if postgres_risky_fast else 'on' }}"
+postgres_fsync: "{{ 'off' if postgres_risky_fast else 'on' }}"
 
-# v9.4
-postgres_checkpoint_segments: 10
+postgres_max_wal_size: 1GB
 
-# v9.5
-postgres_max_wal_size: 480MB # max_wal_size = (3 * checkpoint_segments) * 16MB
+postgres_locale: "{{ system_default_locale|default('en_GB.UTF-8') }}"

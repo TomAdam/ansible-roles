@@ -16,15 +16,20 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Ensure required locale present
+  locale_gen:
+    name: "{{ postgres_locale }}"
+    state: present
+
 - name: Configure PostgreSQL
   template:
-    src: "postgresql.{{ postgres_version }}.conf.j2"
+    src: postgresql-{{ postgres_version }}.conf.j2
     dest: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
   register: check_postgres_configure
 
 - name: Set access control
   template:
-    src: pg_hba.conf.j2
+    src: pg_hba-{{ postgres_version }}.conf.j2
     dest: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
     owner: postgres
     group: postgres

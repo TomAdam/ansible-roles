@@ -1,0 +1,42 @@
+data_directory = '/var/lib/postgresql/{{ postgres_version }}/main'
+hba_file = '/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf'
+ident_file = '/etc/postgresql/{{ postgres_version }}/main/pg_ident.conf'
+external_pid_file = '/var/run/postgresql/{{ postgres_version }}-main.pid'
+
+listen_addresses = 'localhost'
+port = 5432
+max_connections = {{ postgres_max_connections }}
+unix_socket_directories = '/var/run/postgresql'
+
+ssl = off
+
+shared_buffers = {{ postgres_shared_buffers }}
+shared_memory_type = mmap
+dynamic_shared_memory_type = posix
+
+fsync = {{ postgres_fsync }}
+synchronous_commit = {{ postgres_synchronous_commit }}
+full_page_writes = {{ postgres_full_page_writes }}
+max_wal_size = {{ postgres_max_wal_size }}
+min_wal_size = 80MB
+
+effective_cache_size = {{ postgres_effective_cache_size }}
+
+log_line_prefix = '%m [%p] %q%u@%d '
+log_timezone = 'Europe/London'
+
+cluster_name = '{{ postgres_version }}/main'
+
+stats_temp_directory = '/var/run/postgresql/{{ postgres_version }}-main.pg_stat_tmp'
+
+datestyle = 'iso, dmy'
+timezone = 'Europe/London'
+
+lc_messages = '{{ postgres_locale }}'
+lc_monetary = '{{ postgres_locale }}'
+lc_numeric = '{{ postgres_locale }}'
+lc_time = '{{ postgres_locale }}'
+
+default_text_search_config = 'pg_catalog.english'
+
+include_dir = 'conf.d'
