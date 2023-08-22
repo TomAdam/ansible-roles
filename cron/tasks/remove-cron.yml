@@ -1,0 +1,6 @@
+---
+- name: 'Remove "{{ name }}" cron'
+  cron:
+    user: '{{ user }}'
+    name: '{{ name }}'
+    state: absent
