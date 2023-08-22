@@ -1,0 +1,11 @@
+#
+# {{ ansible_managed }}
+#
+
+AuthorizedKeysFile	.ssh/authorized_keys
+AllowTcpForwarding {{ 'yes' if ssh_allow_tcp_forwarding else 'no' }}
+X11Forwarding no
+UseDNS no
+Subsystem sftp {{ '/usr/lib/openssh/sftp-server' if base_ssh_allow_sftp else '' }}
+AllowGroups ssh-users {{ ssh_extra_user_groups | join(' ') }}
+DebianBanner no
