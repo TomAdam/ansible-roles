@@ -28,4 +28,5 @@ base_default_system_packages:
 - htop
 - apt-transport-https
 - man-db
+- gpg  
 base_ssh_allow_sftp: false
