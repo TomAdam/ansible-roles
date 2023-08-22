@@ -4,4 +4,4 @@
     name: ssh
     state: restarted
     enabled: yes
-  when: sshd_status.changed
+  when: sshd_status is changed
