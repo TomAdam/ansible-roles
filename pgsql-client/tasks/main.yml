@@ -1,0 +1,17 @@
+---
+- name: Add PostgreSQL repo key
+  apt_key:
+    data: "{{ lookup('file', 'postgres-repo.asc') }}"
+    state: present
+
+- name: Add PostgreSQL repository
+  apt_repository:
+    repo: "deb https://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
+    state: present
+
+- name: Install PostgreSQL client packages
+  apt:
+    pkg: "{{ postgres_default_packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600

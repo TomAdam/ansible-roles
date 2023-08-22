@@ -1,0 +1,4 @@
+---
+postgres_default_packages:
+- "postgresql-client-{{ postgres_version }}"
+- python3-psycopg2
