@@ -140,5 +140,14 @@
     mode: 0644
   with_items: "{{ known_hosts }}"
 
+- name: Add to profile.d
+  template:
+    src: "{{ item.src }}"
+    dest: "/etc/profile.d/{{ item.dest }}"
+    owner: root
+    group: root
+    mode: "0644"
+  with_items: "{{ base_profile_config }}"
+
 - include_tasks: vagrant.yml
   when: vagrant
