@@ -19,6 +19,15 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Write .npmrc
+  template:
+    src: "node/{{ item.template }}"
+    dest: "{{ item.dir }}/.npmrc"
+    owner: "{{ item.user }}"
+    group: "{{ item.user }}"
+    mode: 0600
+  with_items: "{{ node_npmrc }}"
+
 - name: Install Node global packages
   npm:
     name: "{{ item }}"
