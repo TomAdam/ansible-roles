@@ -29,5 +29,5 @@ base_default_system_packages:
 - apt-transport-https
 - man-db
 - gpg
-base_ssh_allow_sftp: false
+base_ssh_allow_sftp: true
 base_profile_config: []
