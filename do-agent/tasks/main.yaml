@@ -1,10 +1,16 @@
 ---
-- import_tasks: add-key.yml
+- name: Add repo key
+  copy:
+    src: digitalocean-agent-keyring.gpg
+    dest: /usr/share/keyrings/digitalocean-agent-keyring.gpg
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Add repository
   apt_repository:
-    repo: deb https://repos.insights.digitalocean.com/apt/do-agent main main
-    filename: droplet-agent
+    filename: digitalocean-agent
+    repo: deb [signed-by=/usr/share/keyrings/digitalocean-agent-keyring.gpg] https://repos.insights.digitalocean.com/apt/do-agent main main
 
 - name: Install agent
   apt:
