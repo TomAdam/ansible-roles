@@ -2,12 +2,6 @@
 - become_user: "{{ aws_cli_user_config.user }}"
   become: true
   block:
-  - name: Install aws-cli
-    pip:
-      name: awscli
-      extra_args: --upgrade --user
-      state: present
-
   - name: Create config dir
     file:
       state: directory

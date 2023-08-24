@@ -1,6 +1,11 @@
 ---
-- name: Per-user AWS install and config
-  include_tasks: install.yml
+- name: Install aws-cli
+  ansible.builtin.import_role:
+    name: ecgalaxy.aws_cli
+    allow_duplicates: false
+
+- name: Per-user config
+  include_tasks: config.yml
   with_items: "{{ aws_cli_config }}"
   loop_control:
     loop_var: aws_cli_user_config
