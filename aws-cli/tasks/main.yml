@@ -4,6 +4,14 @@
     name: ecgalaxy.aws_cli
     allow_duplicates: false
 
+- name: Configure bash completion
+  template:
+    src: bash_completion.j2
+    dest: /etc/bash_completion.d/aws-cli
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Per-user config
   include_tasks: config.yml
   with_items: "{{ aws_cli_config }}"
