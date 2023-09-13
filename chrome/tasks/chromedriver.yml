@@ -1,46 +1,15 @@
 ---
-- name: Get chrome version
-  command: /usr/bin/google-chrome --version
-  changed_when: false
-  register: chrome_version_result
+- name: Install chromedriver
+  command: npx --yes @puppeteer/browsers install chromedriver@stable --path /opt
+  register: chromedriver_install_result
 
-- name: Get chromedriver version
-  command: /usr/local/bin/chromedriver --version
-  changed_when: false
-  failed_when: chrome_chromedriver_version_result.rc not in [0, 2]
-  register: chrome_chromedriver_version_result
-
-- name: Process chrome versions
+- name: Process chromedriver path
   set_fact:
-    chrome_version: "{{ chrome_version_result.stdout|regex_search('(\\d+\\.\\d+\\.\\d+\\.\\d+)', '\\1')|first }}"
-    chrome_major_version: "{{ chrome_version_result.stdout|regex_search('(\\d+)\\.\\d+\\.\\d+\\.\\d+', '\\1')|first }}"
-    chrome_chromedriver_major_version: 0
+    chromedriver_path: "{{ chromedriver_install_result.stdout|regex_search('chromedriver@[\\d.]+ (.+)', '\\1')|first }}"
 
-- name: Get chromedriver major versions
-  set_fact:
-    chrome_chromedriver_major_version: "{{ chrome_chromedriver_version_result.stdout|default('0.0.0.0')|regex_search('(\\d+)\\.\\d+\\.\\d+\\.\\d+', '\\1')|first }}"
-  when: chrome_chromedriver_version_result.rc == 0
-
-- block:
-  - name: Unpack chromedriver
-    unarchive:
-      src: "{{ chrome_chromedriver_download_url }}"
-      dest: /tmp
-      remote_src: yes
-      include: chromedriver-linux64/chromedriver
-
-  - name: Install chromedriver
-    copy:
-      src: /tmp/chromedriver-linux64/chromedriver
-      dest: /usr/local/bin/chromedriver
-      owner: root
-      group: root
-      mode: 0755
-      remote_src: yes
-
-  - name: Remove chromedriver temp files
-    file:
-      path: /tmp/chromedriver-linux64
-      state: absent
-
-  when: chrome_chromedriver_major_version != chrome_major_version
+- name: Link chromedriver
+  file:
+    src: "{{ chromedriver_path }}"
+    dest: /usr/local/bin/chromedriver
+    state: link
+    force: true

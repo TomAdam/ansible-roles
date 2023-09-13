@@ -1,0 +1,18 @@
+---
+- apt:
+    pkg: google-chrome-stable
+    state: absent
+  ignore_errors: true # there appears to be an ansible bug causing a seg fault when the package is already removed
+
+- apt_repository:
+    filename: google-chrome
+    repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+    state: absent
+
+- file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - /etc/apt/sources.list.d/google-chrome.list
+    - /usr/local/bin/chromedriver-linux64
+    - /usr/local/bin/LICENSE.chromedriver

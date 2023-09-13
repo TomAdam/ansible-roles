@@ -1,20 +1,22 @@
 ---
-- name: Add Google repo key
-  apt_key:
-    data: "{{ lookup('file', 'google-repo.asc') }}"
-    state: present
-
-- name: Add chrome repo # this file is clobbered by chrome so can't use https
-  apt_repository:
-    repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
-    filename: google-chrome
+- name: Remove system chrome
+  include_tasks: remove-system-chrome.yml
+  when: chrome_remove_system_chrome
 
 - name: Install chrome
-  apt:
-    pkg: google-chrome-stable
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
+  command: npx --yes @puppeteer/browsers install chrome@stable --path /opt
+  register: chrome_install_result
+
+- name: Process chrome path
+  set_fact:
+    chrome_path: "{{ chrome_install_result.stdout|regex_search('chrome@[\\d.]+ (.+)', '\\1')|first }}"
+
+- name: Link chrome
+  file:
+    src: "{{ chrome_path }}"
+    dest: /usr/local/bin/google-chrome
+    state: link
+    force: true
 
 - import_tasks: chromedriver.yml
   when: chrome_install_chromedriver
