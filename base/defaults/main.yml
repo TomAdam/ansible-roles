@@ -30,4 +30,5 @@ base_default_system_packages:
 - apt-transport-https
 - man-db
 - gpg
+- zstd
 base_profile_config: []
