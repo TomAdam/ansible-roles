@@ -4,7 +4,7 @@ php_cli_date_timezone: Europe/London
 php_cli_error_reporting: E_ALL & ~E_DEPRECATED & ~E_STRICT
 php_cli_display_errors: Off
 php_cli_display_startup_errors: Off
-php_cli_error_log:
+php_cli_error_log: syslog
 php_cli_mysqlnd_collect_statistics: Off
 php_cli_xdebug: false
 php_cli_xdebug_remote_enable: true
