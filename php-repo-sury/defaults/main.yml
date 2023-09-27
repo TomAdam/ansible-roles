@@ -1,0 +1,3 @@
+---
+php_cli_xdebug: false
+php_fpm_xdebug: false

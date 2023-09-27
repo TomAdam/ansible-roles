@@ -1,3 +1,7 @@
+;
+; {{ ansible_managed }}
+;
+
 [PHP]
 
 ;;;;;;;;;;;;;;;;;;;
@@ -1949,11 +1953,9 @@ opcache.file_cache_fallback = 1
 ; List of headers files to preload, wildcard patterns allowed.
 ;ffi.preload=
 
-{% if php_fpm_xdebug %}
 [xdebug]
 xdebug.mode=debug,develop
 xdebug.client_host = {{ php_fpm_xdebug_client_host }}
 xdebug.start_with_request = {{ php_fpm_xdebug_start_with_request }}
 xdebug.idekey = {{ php_fpm_xdebug_idekey }}
 xdebug.max_nesting_level = {{ php_fpm_xdebug_max_nesting_level }}
-{% endif %}

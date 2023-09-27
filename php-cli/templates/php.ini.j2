@@ -128,11 +128,9 @@ ldap.max_links = -1
 opcache.enable = 0
 opcache.enable_cli = 0
 
-{% if php_cli_xdebug %}
 [xdebug]
 xdebug.remote_enable = {{ php_cli_xdebug_remote_enable }}
 xdebug.remote_host = {{ php_cli_xdebug_remote_host }}
 xdebug.remote_autostart = {{ php_cli_xdebug_remote_autostart }}
 xdebug.idekey = {{ php_cli_xdebug_idekey }}
 xdebug.max_nesting_level = {{ php_cli_xdebug_max_nesting_level }}
-{% endif %}

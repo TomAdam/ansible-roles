@@ -20,6 +20,12 @@
     update_cache: yes
     cache_valid_time: 3600
   when: php_cli_xdebug
+  register: php_cli_xdebug_installed
+
+- name: Disable xdebug by default
+  file:
+    path: "/etc/php/{{ php_cli_version }}/cli/conf.d/20-xdebug.ini"
+    state: absent
 
 - name: Apply PHP CLI settings
   template:

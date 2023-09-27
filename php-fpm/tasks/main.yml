@@ -22,6 +22,12 @@
     cache_valid_time: 3600
   when: php_fpm_xdebug
   notify: restart php-fpm
+  register: php_fpm_xdebug_installed
+
+- name: Disable xdebug by default
+  file:
+    path: "/etc/php/{{ php_fpm_version }}/fpm/conf.d/20-xdebug.ini"
+    state: absent
 
 - name: Remove default pool
   file:

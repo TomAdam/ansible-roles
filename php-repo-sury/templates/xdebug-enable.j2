@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ln -sf /etc/php/{{ php_version }}/mods-available/xdebug.ini /etc/php/{{ php_version }}/cli/conf.d/20-xdebug.ini
+ln -sf /etc/php/{{ php_version }}/mods-available/xdebug.ini /etc/php/{{ php_version }}/fpm/conf.d/20-xdebug.ini
+systemctl reload php{{ php_version }}-fpm.service

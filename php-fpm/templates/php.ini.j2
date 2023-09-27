@@ -173,11 +173,9 @@ opcache.file_cache_fallback = 1
 opcache.validate_timestamps = {{ php_fpm_opcache_validate_timestamps }}
 opcache.revalidate_freq = {{ php_fpm_opcache_revalidate_freq }}
 
-{% if php_fpm_xdebug %}
 [xdebug]
 xdebug.remote_enable = {{ php_fpm_xdebug_remote_enable }}
 xdebug.remote_host = {{ php_fpm_xdebug_remote_host }}
 xdebug.remote_autostart = {{ php_fpm_xdebug_remote_autostart }}
 xdebug.idekey = {{ php_fpm_xdebug_idekey }}
 xdebug.max_nesting_level = {{ php_fpm_xdebug_max_nesting_level }}
-{% endif %}

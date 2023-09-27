@@ -11,3 +11,15 @@
 - name: Add PHP repository
   apt_repository:
     repo: deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main
+
+- name: Install xdebug control scripts
+  template:
+    src: "{{ item }}.j2"
+    dest: "/usr/local/bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+  - xdebug-enable
+  - xdebug-disable
+  when: php_fpm_xdebug or php_cli_xdebug
