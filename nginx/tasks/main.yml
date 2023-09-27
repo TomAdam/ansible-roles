@@ -1,12 +1,15 @@
 ---
 - name: Add repository key
-  apt_key:
-    data: "{{ lookup('file', 'repo.asc') }}"
-    state: present
+  copy:
+    src: nginx-archive-keyring.gpg
+    dest: /usr/share/keyrings/nginx-archive-keyring.gpg
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Add upstream repository
   apt_repository:
-    repo: deb https://nginx.org/packages/debian {{ ansible_distribution_release }} nginx
+    repo: deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/debian {{ ansible_distribution_release }} nginx
 
 # passlib for basic auth
 - name: Install Nginx

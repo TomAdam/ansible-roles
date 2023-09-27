@@ -1,5 +1,8 @@
 ---
 - name: Add PHP repo key
-  apt_key:
-      data: "{{ lookup('file', lookup('first_found', ['php-sury-repo.asc', 'roles/php-repo-sury/files/php-sury-repo.asc'])) }}"
-      state: present
+  copy:
+    src: php-sury-repo.gpg
+    dest: /usr/share/keyrings/php-sury-repo.gpg
+    owner: root
+    group: root
+    mode: 0644
