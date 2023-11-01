@@ -4,5 +4,5 @@
     repo: "{{ item }}"
     state: absent
   with_items:
-    - "deb https://deb.nodesource.com/node_{{ version }} nodistro main"
-    - "deb-src https://deb.nodesource.com/node_{{ version }} nodistro main"
+    - "deb https://deb.nodesource.com/node_{{ version }}.x nodistro main"
+    - "deb-src https://deb.nodesource.com/node_{{ version }}.x nodistro main"
