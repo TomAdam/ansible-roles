@@ -1,7 +1,7 @@
 ---
 - name: Add PHP repo key
   copy:
-    src: php-sury-repo.gpg
+    src: "{{ lookup('first_found', ['php-sury-repo.gpg', 'roles/php-repo-sury/files/php-sury-repo.gpg']) }}"
     dest: /usr/share/keyrings/php-sury-repo.gpg
     owner: root
     group: root
