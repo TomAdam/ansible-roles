@@ -1,8 +1,8 @@
 ---
 phpbu_enable: true
 
-phpbu_repo_url: https://github.com/sebastianfeldmann/phpbu.git
-phpbu_repo_version: d159225835d45a661b85f5514ff5099cb6895ba1
+phpbu_phar_url: 'https://phar.phpbu.de/phpbu-6.0.22.phar'
+phpbu_phar_checksum: 'sha256:a62c78a52f6c7f2b9f64dfb4028f619d2c107cabfbde40c53a95bbff7f8dd31e'
 
 phpbu_cron_enable: true
 
