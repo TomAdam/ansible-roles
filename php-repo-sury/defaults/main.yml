@@ -1,3 +1,5 @@
 ---
 php_cli_xdebug: false
 php_fpm_xdebug: false
+php_xdebug_control_script_enable: xdebug-enable.j2
+php_xdebug_control_script_disable: xdebug-disable.j2

@@ -7,12 +7,14 @@
 
 - name: Install xdebug control scripts
   template:
-    src: "{{ item }}.j2"
-    dest: "/usr/local/bin/{{ item }}"
+    src: "{{ item.src }}"
+    dest: "/usr/local/bin/{{ item.dest }}"
     owner: root
     group: root
     mode: 0755
   with_items:
-  - xdebug-enable
-  - xdebug-disable
+  - src: "{{ php_xdebug_control_script_enable }}"
+    dest: xdebug-enable
+  - src: "{{ php_xdebug_control_script_disable }}"
+    dest: xdebug-disable
   when: php_fpm_xdebug or php_cli_xdebug
