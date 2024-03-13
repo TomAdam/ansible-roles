@@ -1,0 +1,6 @@
+---
+- name: Per-user AWS install and config
+  include_tasks: config.yml
+  with_items: "{{ aws_config }}"
+  loop_control:
+    loop_var: aws_config_user_config

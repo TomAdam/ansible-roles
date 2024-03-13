@@ -1,0 +1,5 @@
+{% for profile in profiles %}
+[{{ '' if profile.name == 'default' else 'profile ' }}{{ profile.name }}]
+{% if profile.region is defined %}region = {{ profile.region }}{% endif %}
+
+{% endfor %}
