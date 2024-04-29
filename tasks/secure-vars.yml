@@ -7,6 +7,11 @@
   with_items: "{{ group_names }}"
   register: secure_vars_group_files
 
+- name: Import common secure vars
+  include_vars:
+      file: "secure_vars/common.yml"
+  when: load_common_secure_vars|default(false)
+
 - name: Import secure vars
   include_vars:
     file: "{{ item.stat.path }}"
