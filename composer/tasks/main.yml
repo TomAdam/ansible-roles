@@ -18,13 +18,18 @@
   changed_when: "'Updating to version' in composer_update.stdout"
   when: composer_keep_updated
 
+- name: Create bash completion directory
+  file:
+    path: /etc/bash_completion.d
+    state: directory
+
 - name: Check if Composer Bash completion exists
   stat:
     path: /etc/bash_completion.d/composer
   register: composer_completion_stat
 
 - name: Generate Composer Bash completion
-  shell: "COMPOSER_ALLOW_SUPERUSER=1 composer completion bash > /etc/bash_completion.d/composer"
+  shell: "/usr/local/bin/composer completion bash > /etc/bash_completion.d/composer"
   when: composer_install is changed or composer_update is changed or not composer_completion_stat.stat.exists
 
 - name: Install Composer global packages
