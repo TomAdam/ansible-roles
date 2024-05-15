@@ -3,6 +3,13 @@
   include_tasks: remove-system-chrome.yml
   when: chrome_remove_system_chrome
 
+- name: Install chrome system dependencies
+  apt:
+    pkg: "{{ chrome_system_dependencies }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: Install chrome
   command: npx --yes @puppeteer/browsers install chrome@stable --path /opt
   register: chrome_install_result
