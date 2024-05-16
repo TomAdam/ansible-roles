@@ -1,0 +1,8 @@
+---
+- name: Add MySQL repo key
+  copy:
+    src: "{{ lookup('first_found', ['mysql-repo.gpg', 'roles/mysql/files/mysql-repo.gpg']) }}"
+    dest: /usr/share/keyrings/mysql-repo.gpg
+    owner: root
+    group: root
+    mode: 0644

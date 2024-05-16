@@ -1,21 +1,18 @@
 ---
-- name: Add MySQL repo key
-  apt_key:
-    data: "{{ lookup('file', 'mysql-repo.asc') }}"
-    state: present
+- import_tasks: add-key.yml
 
 - name: Add MySQL repository
   apt_repository:
-    repo: "deb https://repo.mysql.com/apt/debian/ {{ ansible_distribution_release }} mysql-{{ mysql_version }}"
+    repo: deb [signed-by=/usr/share/keyrings/mysql-repo.gpg] https://repo.mysql.com/apt/debian/ {{ ansible_distribution_release }} mysql-{{ mysql_version }}
 
 - name: Check if MySQL server installed
   shell: dpkg-query -W -f='${db:Status-Abbrev}' mysql-server || true
   changed_when: false
   register: mysql_installed
 
-- name: Install MySQL packages
+- name: Install MySQL server
   apt:
-    pkg: mysql-server,mysql-client,python3-mysqldb
+    pkg: mysql-server,python3-mysqldb
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -32,8 +29,8 @@
 
 - name: Configure
   template:
-    src: my.cnf.j2
-    dest: /etc/mysql/my.cnf
+    src: tuning.cnf.j2
+    dest: /etc/mysql/conf.d/tuning.cnf
     owner: root
     group: root
     mode: 0644
@@ -53,6 +50,7 @@
     login_user: root
     login_password: "{{ mysql_root_password }}"
     check_implicit_admin: yes
+    column_case_sensitive: yes
   no_log: false
   loop_control:
     label: "root@{{ item }}"
@@ -80,6 +78,7 @@
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
+    column_case_sensitive: yes
   no_log: false
   loop_control:
     label: "{{ item.name }}@{{ item.host | default('localhost') }}"
