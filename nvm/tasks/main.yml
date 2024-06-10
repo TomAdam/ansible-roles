@@ -1,11 +1,4 @@
 ---
-- name: Fix bug in libcurl3-gnutls by requiring older version
-  apt:
-    name: libcurl3-gnutls=7.64.0-4+deb10u2
-    allow_downgrade: true
-    state: present
-    force: true
-
 - name: Per-user NVM config
   include_tasks: per_user.yml
   with_items: '{{ nvm_config }}'
