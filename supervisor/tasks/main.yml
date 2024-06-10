@@ -30,7 +30,7 @@
     dest: /etc/supervisor/supervisord.conf
     owner: root
     group: "{{ supervisor_group }}"
-    mode: 0644
+    mode: 0640
   notify: restart supervisor
 
 - name: Install supervisor configs
@@ -39,6 +39,6 @@
     dest: "/etc/supervisor/conf.d/{{ item.dest }}"
     owner: root
     group: "{{ supervisor_group }}"
-    mode: 0644
+    mode: 0640
   with_items: "{{ supervisor_configs }}"
   notify: update supervisor
