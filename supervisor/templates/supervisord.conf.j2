@@ -23,11 +23,11 @@ serverurl=unix:///var/run/supervisor.sock
 
 {% if supervisor_crashmail_enable %}
 [eventlistener:crashmailbatch]
-command=crashmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject }}"
+command=crashmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject }}" --smtpHost="{{ supervisor_crashmail_smtp_host }}" --userName="{{ supervisor_crashmail_smtp_user }}" --password="{{ supervisor_crashmail_smtp_password }}" --tls
 events=PROCESS_STATE,TICK_60
 
 [eventlistener:fatalmailbatch]
-command=fatalmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject_fatal }}"
+command=fatalmailbatch --toEmail="{{ supervisor_crashmail_to }}" --fromEmail="{{ supervisor_crashmail_from }}" --subject="{{ supervisor_crashmail_subject_fatal }}" --smtpHost="{{ supervisor_crashmail_smtp_host }}" --userName="{{ supervisor_crashmail_smtp_user }}" --password="{{ supervisor_crashmail_smtp_password }}" --tls
 events=PROCESS_STATE,TICK_60
 {% endif %}
 
