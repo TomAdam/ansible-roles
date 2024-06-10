@@ -1,8 +1,8 @@
 ---
 phpbu_enable: true
 
-phpbu_phar_url: 'https://phar.phpbu.de/phpbu-6.0.22.phar'
-phpbu_phar_checksum: 'sha256:a62c78a52f6c7f2b9f64dfb4028f619d2c107cabfbde40c53a95bbff7f8dd31e'
+phpbu_phar_url: 'https://phar.phpbu.de/phpbu-6.0.23.phar'
+phpbu_phar_checksum: 'sha256:eea9071fb40063b5aaaf37e8ef5c492cef141c6ef1b37fd28de9d236ca38a858'
 
 phpbu_cron_enable: true
 
