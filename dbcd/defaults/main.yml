@@ -1,0 +1,4 @@
+---
+dbcd_modes: []
+dbcd_server_user: dbcd
+dbcd_data_dir: "/home/{{ dbcd_server_user }}/data"

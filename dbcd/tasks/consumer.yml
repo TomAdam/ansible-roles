@@ -1,0 +1,24 @@
+---
+# This is to be applied to machine that need to download the database dump from the server
+- name: "Add dbcd server ssh config"
+  blockinfile:
+    block: |
+      Host dbcd-server-r
+        HostName {{ dbcd_server_host }}
+        User {{ dbcd_server_user }}
+    path: "/home/{{ dbcd_consumer_user }}/.ssh/config"
+    owner: "{{ dbcd_consumer_user }}"
+    group: "{{ dbcd_consumer_user }}"
+    create: true
+    mode: 0600
+    marker: "# {mark}-DBCD-R ANSIBLE MANAGED BLOCK"
+
+- name: "Add dbcd server to known hosts"
+  lineinfile:
+    dest: /etc/ssh/ssh_known_hosts
+    line: "{{ item }}"
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ dbcd_known_hosts }}"

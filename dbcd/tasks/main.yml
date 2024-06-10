@@ -1,0 +1,12 @@
+---
+- name: DBCD Server
+  include_tasks: server.yml
+  when: "'server' in dbcd_modes"
+
+- name: DBCD Client
+  include_tasks: client.yml
+  when: "'client' in dbcd_modes"
+
+- name: DBCD Consumer
+  include_tasks: consumer.yml
+  when: "'consumer' in dbcd_modes"

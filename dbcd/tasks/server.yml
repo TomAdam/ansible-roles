@@ -1,0 +1,30 @@
+---
+# This is to be applied to the machine that serves the database dumps
+- name: "Create user"
+  user:
+    name: "{{ dbcd_server_user }}"
+    password: '*'
+    append: yes
+    groups: ssh-users
+    shell: /bin/dash
+
+- name: "Assign client (write-only) authorized key"
+  authorized_key:
+    user: "{{ dbcd_server_user }}"
+    key: "{{ dbcd_server_client_public_key }}"
+    key_options: 'command="rrsync -wo {{ dbcd_data_dir }}"'
+
+- name: "Assign consumer (read-only) authorized keys"
+  authorized_key:
+    user: "{{ dbcd_server_user }}"
+    key: "{{ item }}"
+    key_options: 'command="rrsync -ro {{ dbcd_data_dir }}"'
+  with_items: "{{ dbcd_server_consumer_public_keys }}"
+
+- name: "Create directory"
+  file:
+    path: "{{ dbcd_data_dir }}"
+    state: directory
+    owner: "{{ dbcd_server_user }}"
+    group: "{{ dbcd_server_user }}"
+    mode: 0750
