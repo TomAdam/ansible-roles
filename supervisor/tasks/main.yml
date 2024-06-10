@@ -10,6 +10,7 @@
   pip:
     name: superlance
     state: present
+    extra_args: --break-system-packages
   when: supervisor_crashmail_enable
 
 - name: Add supervisor group
