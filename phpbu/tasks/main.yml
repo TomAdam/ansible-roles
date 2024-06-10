@@ -53,6 +53,15 @@
       state: link
       force: yes
 
+  - name: Download phpbu schema
+    get_url:
+      url: '{{ phpbu_schema_url }}'
+      dest: '{{ phpbu_lib_dir }}/phpbu.xsd'
+      mode: '0644'
+      owner: root
+      group: root
+      force: yes
+
   - name: Configure
     template:
       src: templates/phpbu/phpbu.xml
