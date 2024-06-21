@@ -1,11 +1,5 @@
 ---
-- name: Add repository key
-  copy:
-    src: nginx-archive-keyring.gpg
-    dest: /usr/share/keyrings/nginx-archive-keyring.gpg
-    owner: root
-    group: root
-    mode: 0644
+- import_tasks: add-key.yml
 
 - name: Add upstream repository
   apt_repository:
