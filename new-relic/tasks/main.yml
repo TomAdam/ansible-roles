@@ -1,12 +1,15 @@
 ---
-- name: Install New Relic repo key
-  apt_key:
-    data: "{{ lookup('file', 'newrelic-repo.asc') }}"
-    state: present
+- name: Add repo key
+  copy:
+    src: newrelic-repo.gpg
+    dest: /usr/share/keyrings/newrelic-repo.gpg
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Add New Relic repo
   apt_repository:
-    repo: "deb https://apt.newrelic.com/debian/ newrelic non-free"
+    repo: "deb [signed-by=/usr/share/keyrings/newrelic-repo.gpg] https://apt.newrelic.com/debian/ newrelic non-free"
 
 - name: Install New Relic
   apt:
