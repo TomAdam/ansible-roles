@@ -1,0 +1,13 @@
+---
+- name: Remove previous repository config
+  file:
+    path: /etc/apt/sources.list.d/nginx_org_packages_debian.list
+    state: absent
+
+- name: Update APT
+  apt:
+      update_cache: yes
+
+- name: Add repository config trusting the expired key
+  apt_repository:
+    repo: "deb [trusted=yes] https://nginx.org/packages/debian {{ ansible_distribution_release }} nginx"
