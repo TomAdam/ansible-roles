@@ -9,3 +9,4 @@ license_file: 'LICENSE.md'
 repository: https://github.com/TomAdam/ansible-roles
 build_ignore:
   - .idea
+  - .gitignore
