@@ -1,6 +1,6 @@
 ---
 - name: Install chromedriver
-  command: npx --yes @puppeteer/browsers install chromedriver@stable --path /opt
+  command: "npx --yes @puppeteer/browsers install chromedriver@{{chrome_chromedriver_version}} --path /opt"
   register: chromedriver_install_result
 
 - name: Process chromedriver path

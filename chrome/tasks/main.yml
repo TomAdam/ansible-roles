@@ -11,7 +11,7 @@
     cache_valid_time: 3600
 
 - name: Install chrome
-  command: npx --yes @puppeteer/browsers install chrome@stable --path /opt
+  command: "npx --yes @puppeteer/browsers install chrome@{{chrome_version}} --path /opt"
   register: chrome_install_result
 
 - name: Process chrome path

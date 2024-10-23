@@ -1,4 +1,6 @@
 ---
+chrome_version: stable
+chrome_chromedriver_version: "{{ chrome_version }}"
 chrome_install_chromedriver: false
 chrome_remove_system_chrome: false
 
