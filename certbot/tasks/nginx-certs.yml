@@ -1,0 +1,23 @@
+---
+- name: "Create certificate {{ certbot_certs_item.name }}"
+  ansible.builtin.command: >
+    certbot certonly
+    --{{ certbot_mode }}
+    --noninteractive
+    --agree-tos
+    --email "{{ certbot_certs_item.admin_email }}"
+    --domains "{{ certbot_certs_item.domains | join(',') }}"
+    --cert-name "{{ certbot_certs_item.name }}"
+    {{ certbot_dry_run | ternary('--dry-run', '') }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ certbot_certs_item.name }}/cert.pem"
+
+- name: Patch standalone authentication to Nginx
+  ansible.builtin.lineinfile:
+    path: '/etc/letsencrypt/renewal/{{ certbot_certs_item.name }}.conf'
+    search_string: '{{ item.search }}'
+    line: '{{ item.replace }}'
+    insertafter: '\[renewalparams\]'
+  with_items:
+    - { search: 'authenticator = standalone', replace: 'authenticator = nginx' }
+    - { search: 'installer = None', replace: 'installer = nginx' }

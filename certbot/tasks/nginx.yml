@@ -1,0 +1,27 @@
+---
+# On the first provision, nginx should not be running
+- name: Check if nginx running
+  ansible.builtin.command: systemctl is-active nginx.service
+  failed_when: certbot_nginx_active.rc not in [0, 3]
+  changed_when: false
+  register: certbot_nginx_active
+
+# The Nginx plugin should only be installed if Nginx is installed as the package has a dependency on Nginx
+- name: Install nginx plugin
+  ansible.builtin.apt:
+    name: python3-certbot-nginx
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  when: certbot_nginx_active.stdout == 'active'
+
+- name: Determine certbot mode
+  ansible.builtin.set_fact:
+    certbot_mode: "{{ (certbot_nginx_active.stdout == 'active') | ternary('nginx', 'standalone') }}"
+
+- with_items: '{{ certbot_certs }}'
+  ansible.builtin.include_tasks: nginx-certs.yml
+  loop_control:
+    loop_var: certbot_certs_item
+    label: "{{ certbot_certs_item.name }}"
+  when: certbot_certs|length
