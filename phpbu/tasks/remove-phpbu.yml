@@ -1,0 +1,23 @@
+---
+- name: "phpbu : Remove cron"
+  ansible.builtin.cron:
+    user: phpbu
+    name: 'PHPBU Database Backup'
+    state: absent
+
+- name: "phpbu : Remove files"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /usr/local/bin/phpbu
+    - /etc/phpbu.xml
+    - "{{ phpbu_lib_dir|default('/var/lib/phpbu') }}"
+    - "{{ phpbu_log_dir|default('/var/log/phpbu') }}"
+    - "{{ phpbu_backup_dir|default('/var/lib/phpbu/backups') }}"
+
+- name: "phpbu : Remove user"
+  ansible.builtin.user:
+    name: phpbu
+    state: absent
+    remove: true
