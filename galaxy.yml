@@ -1,0 +1,11 @@
+namespace: tomb
+name: roles
+version: 1.0.0
+readme: README.md
+authors:
+- Tom Borealis <tom@lampbristol.com>
+description: A collection of roles for provisioning local and production environments
+license_file: 'LICENSE.md'
+repository: https://github.com/TomAdam/ansible-roles
+build_ignore:
+  - .idea
