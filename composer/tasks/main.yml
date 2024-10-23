@@ -29,7 +29,7 @@
   register: composer_completion_stat
 
 - name: Generate Composer Bash completion
-  shell: "/usr/local/bin/composer completion bash > /etc/bash_completion.d/composer"
+  shell: "COMPOSER_ALLOW_SUPERUSER=1 composer completion bash > /etc/bash_completion.d/composer"
   when: composer_install is changed or composer_update is changed or not composer_completion_stat.stat.exists
 
 - name: Install Composer global packages
