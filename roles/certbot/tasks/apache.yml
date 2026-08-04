@@ -14,18 +14,5 @@
     label: "{{ certbot_certs_item.name }}"
   when: certbot_certs|length > 0
 
-- name: Install SSL vhosts
-  ansible.builtin.template:
-    src: "templates/apache2/vhosts/{{ item.src }}"
-    dest: "/etc/apache2/sites-available/{{ item.dest }}"
-    mode: "0644"
-  with_items: "{{ certbot_apache2_ssl_vhosts }}"
-  notify: Restart apache2
-
-- name: Enable SSL vhosts
-  ansible.builtin.file:
-    src: "/etc/apache2/sites-available/{{ item.dest }}"
-    path: "/etc/apache2/sites-enabled/{{ item.dest }}"
-    state: link
-  with_items: "{{ certbot_apache2_ssl_vhosts }}"
-  notify: Restart apache2
+- name: Install and enable SSL vhosts
+  ansible.builtin.include_tasks: apache-ssl-vhosts.yml

@@ -52,3 +52,35 @@
         mode: "0644"
   roles:
     - role: tborealis.roles.certbot
+
+# dns-cloudflare mode with its own vhost fixture (apache2 exists by now):
+# proves a DNS mode installs SSL vhosts — the reason the mode installs them is
+# that apache hosts switching to DNS validation must not lose vhost management.
+- name: Converge (dns-cloudflare mode)
+  hosts: all
+  become: true
+  vars_files:
+    - vars.yml
+  vars:
+    certbot_mode: dns-cloudflare
+    certbot_apache2_ssl_vhosts:
+      - src: molecule-cloudflare-ssl.conf.j2
+        dest: molecule-cloudflare-ssl.conf
+  pre_tasks:
+    - name: Create vhost document root
+      ansible.builtin.file:
+        path: /var/www/molecule-cloudflare-ssl
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Write vhost index page
+      ansible.builtin.copy:
+        content: "{{ certbot_test_cloudflare_vhost_marker }}\n"
+        dest: /var/www/molecule-cloudflare-ssl/index.html
+        owner: root
+        group: root
+        mode: "0644"
+  roles:
+    - role: tborealis.roles.certbot

@@ -1,0 +1,29 @@
+---
+# No pip fallback here, unlike dns-digitalocean: trixie still packages the
+# Cloudflare plugin.
+- name: Install Cloudflare DNS plugin
+  ansible.builtin.apt:
+    name: python3-certbot-dns-cloudflare
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create Cloudflare DNS credentials file
+  ansible.builtin.copy:
+    content: |
+      dns_cloudflare_api_token = "{{ certbot_cloudflare_dns_token }}"
+    dest: /etc/letsencrypt/cloudflare.ini
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Process certificates
+  with_items: "{{ certbot_certs }}"
+  ansible.builtin.include_tasks: dns-cloudflare-certs.yml
+  loop_control:
+    loop_var: certbot_certs_item
+    label: "{{ certbot_certs_item.name }}"
+  when: certbot_certs|length > 0
+
+- name: Install and enable SSL vhosts
+  ansible.builtin.include_tasks: apache-ssl-vhosts.yml

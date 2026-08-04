@@ -11,6 +11,15 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+### Added
+
+- **certbot:** new `dns-cloudflare` mode — DNS-01 validation via a Cloudflare
+  API token (`certbot_cloudflare_dns_token`, scoped to Zone → DNS → Edit on
+  the certificates' zones). Like `apache` mode — and unlike `dns-digitalocean`,
+  whose behaviour is unchanged — it installs `certbot_apache2_ssl_vhosts`, so
+  apache hosts can switch to DNS validation without losing SSL vhost
+  management.
+
 ## [6.0.0] - 2026-07-20
 
 ### Added

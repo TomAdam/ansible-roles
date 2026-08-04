@@ -14,10 +14,11 @@
       register: certbot_verify_plugins
       changed_when: false
 
-    - name: Assert DigitalOcean DNS and apache plugins are registered with certbot
+    - name: Assert DNS and apache plugins are registered with certbot
       ansible.builtin.assert:
         that:
           - "'dns-digitalocean' in certbot_verify_plugins.stdout"
+          - "'dns-cloudflare' in certbot_verify_plugins.stdout"
           - "'apache' in certbot_verify_plugins.stdout"
 
     - name: Check renewal timer state # noqa: command-instead-of-module (service_facts does not report timer units)
@@ -63,6 +64,31 @@
             'dns_digitalocean_token = "' ~ certbot_digitalocean_dns_token ~ '"'
             in certbot_verify_credentials.content | b64decode
 
+    - name: Stat Cloudflare credentials file
+      ansible.builtin.stat:
+        path: /etc/letsencrypt/cloudflare.ini
+      register: certbot_verify_cloudflare_credentials_stat
+
+    - name: Assert Cloudflare credentials file is root-owned and private
+      ansible.builtin.assert:
+        that:
+          - certbot_verify_cloudflare_credentials_stat.stat.exists
+          - certbot_verify_cloudflare_credentials_stat.stat.pw_name == 'root'
+          - certbot_verify_cloudflare_credentials_stat.stat.gr_name == 'root'
+          - certbot_verify_cloudflare_credentials_stat.stat.mode == '0600'
+
+    - name: Read Cloudflare credentials file
+      ansible.builtin.slurp:
+        src: /etc/letsencrypt/cloudflare.ini
+      register: certbot_verify_cloudflare_credentials
+
+    - name: Assert the configured Cloudflare token is written to the credentials file
+      ansible.builtin.assert:
+        that:
+          - >-
+            'dns_cloudflare_api_token = "' ~ certbot_cloudflare_dns_token ~ '"'
+            in certbot_verify_cloudflare_credentials.content | b64decode
+
     - name: Stat enabled SSL vhost symlink
       ansible.builtin.stat:
         path: /etc/apache2/sites-enabled/molecule-ssl.conf
@@ -86,3 +112,27 @@
       ansible.builtin.assert:
         that:
           - certbot_test_vhost_marker in certbot_verify_vhost_response.content
+
+    - name: Stat enabled dns-cloudflare SSL vhost symlink
+      ansible.builtin.stat:
+        path: /etc/apache2/sites-enabled/molecule-cloudflare-ssl.conf
+      register: certbot_verify_cloudflare_vhost_link
+
+    - name: Assert dns-cloudflare SSL vhost is enabled
+      ansible.builtin.assert:
+        that:
+          - certbot_verify_cloudflare_vhost_link.stat.islnk | default(false)
+          - certbot_verify_cloudflare_vhost_link.stat.lnk_source == '/etc/apache2/sites-available/molecule-cloudflare-ssl.conf'
+
+    - name: Probe the dns-cloudflare SSL vhost over HTTP
+      ansible.builtin.uri:
+        url: http://127.0.0.1/
+        headers:
+          Host: "{{ certbot_test_cloudflare_vhost_server_name }}"
+        return_content: true
+      register: certbot_verify_cloudflare_vhost_response
+
+    - name: Assert the dns-cloudflare vhost serves its document root
+      ansible.builtin.assert:
+        that:
+          - certbot_test_cloudflare_vhost_marker in certbot_verify_cloudflare_vhost_response.content

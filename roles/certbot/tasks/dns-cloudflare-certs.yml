@@ -1,0 +1,15 @@
+---
+- name: "Create certificate {{ certbot_certs_item.name }}"
+  ansible.builtin.command: >
+    certbot certonly
+    --dns-cloudflare
+    --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
+    --non-interactive
+    --agree-tos
+    --email "{{ certbot_certs_item.admin_email }}"
+    --domains "{{ certbot_certs_item.domains | join(',') }}"
+    --cert-name "{{ certbot_certs_item.name }}"
+    {{ '--deploy-hook "' + certbot_certs_item.deploy_hook + '"' if certbot_certs_item.deploy_hook is defined else '' }}
+    {{ certbot_dry_run | ternary('--dry-run', '') }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ certbot_certs_item.name }}/cert.pem"
