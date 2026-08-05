@@ -52,3 +52,15 @@
         mode: "0644"
   roles:
     - role: tborealis.roles.certbot
+
+# dns-cloudflare mode: like dns-digitalocean it only manages the plugin and
+# the credentials file — no webserver coupling.
+- name: Converge (dns-cloudflare mode)
+  hosts: all
+  become: true
+  vars_files:
+    - vars.yml
+  vars:
+    certbot_mode: dns-cloudflare
+  roles:
+    - role: tborealis.roles.certbot

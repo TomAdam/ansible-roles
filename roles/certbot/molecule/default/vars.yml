@@ -1,8 +1,9 @@
 ---
-# Throwaway test credential shared by converge.yml and verify.yml. Deliberately
-# NOT shaped like a real DigitalOcean token so secret scanning cannot mistake
-# it for one; no ACME requests are made because certbot_certs stays empty.
+# Throwaway test credentials shared by converge.yml and verify.yml. Deliberately
+# NOT shaped like real DigitalOcean/Cloudflare tokens so secret scanning cannot
+# mistake them for one; no ACME requests are made because certbot_certs stays empty.
 certbot_digitalocean_dns_token: molecule-fake-do-token-0123456789
+certbot_cloudflare_dns_token: molecule-fake-cloudflare-token-0123456789
 
 # Apache-mode fixture shared by converge.yml, verify.yml and the vhost
 # template under templates/apache2/vhosts/.
