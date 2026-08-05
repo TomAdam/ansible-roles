@@ -112,27 +112,3 @@
       ansible.builtin.assert:
         that:
           - certbot_test_vhost_marker in certbot_verify_vhost_response.content
-
-    - name: Stat enabled dns-cloudflare SSL vhost symlink
-      ansible.builtin.stat:
-        path: /etc/apache2/sites-enabled/molecule-cloudflare-ssl.conf
-      register: certbot_verify_cloudflare_vhost_link
-
-    - name: Assert dns-cloudflare SSL vhost is enabled
-      ansible.builtin.assert:
-        that:
-          - certbot_verify_cloudflare_vhost_link.stat.islnk | default(false)
-          - certbot_verify_cloudflare_vhost_link.stat.lnk_source == '/etc/apache2/sites-available/molecule-cloudflare-ssl.conf'
-
-    - name: Probe the dns-cloudflare SSL vhost over HTTP
-      ansible.builtin.uri:
-        url: http://127.0.0.1/
-        headers:
-          Host: "{{ certbot_test_cloudflare_vhost_server_name }}"
-        return_content: true
-      register: certbot_verify_cloudflare_vhost_response
-
-    - name: Assert the dns-cloudflare vhost serves its document root
-      ansible.builtin.assert:
-        that:
-          - certbot_test_cloudflare_vhost_marker in certbot_verify_cloudflare_vhost_response.content

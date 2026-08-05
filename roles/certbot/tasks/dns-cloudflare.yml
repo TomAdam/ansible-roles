@@ -24,6 +24,3 @@
     loop_var: certbot_certs_item
     label: "{{ certbot_certs_item.name }}"
   when: certbot_certs|length > 0
-
-- name: Install and enable SSL vhosts
-  ansible.builtin.include_tasks: apache-ssl-vhosts.yml

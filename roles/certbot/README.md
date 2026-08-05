@@ -13,6 +13,9 @@ Installs certbot and requests Let's Encrypt certificates in one of four modes:
 - `dns-cloudflare` mode needs a Cloudflare API token with Zone → DNS → Edit
   permission on every zone the certificates cover, created at
   https://dash.cloudflare.com/profile/api-tokens.
+- The DNS modes are standalone — they need nothing from a webserver, so the role
+  can run before the webserver role, which then installs SSL vhosts against
+  certificates that already exist.
 
 ## Role Variables
 
@@ -21,7 +24,7 @@ Installs certbot and requests Let's Encrypt certificates in one of four modes:
 | `certbot_mode` | Required | Mode: `nginx`, `apache`, `dns-digitalocean` or `dns-cloudflare` |
 | `certbot_certs` | `[]` | Certificates to request; see below |
 | `certbot_dry_run` | `false` | Pass `--dry-run` to certbot: exercises the request without creating certificates, avoiding rate limits |
-| `certbot_apache2_ssl_vhosts` | `apache2_vhosts` if defined, else `[]` | `apache` and `dns-cloudflare` modes: SSL vhosts to install once certificates exist; see below |
+| `certbot_apache2_ssl_vhosts` | `apache2_vhosts` if defined, else `[]` | `apache` mode only: SSL vhosts to install once certificates exist; see below |
 | `certbot_digitalocean_dns_token` | Required in `dns-digitalocean` mode | DigitalOcean API token with all `domain` scopes |
 | `certbot_cloudflare_dns_token` | Required in `dns-cloudflare` mode | Cloudflare API token with Zone → DNS → Edit on the certificates' zones |
 
@@ -48,10 +51,9 @@ never served.
 
 ## Apache SSL vhosts
 
-`apache` and `dns-cloudflare` modes install the vhosts in
-`certbot_apache2_ssl_vhosts` after the certificates exist. (`dns-digitalocean`
-predates this and does not install vhosts.) Templates are resolved relative to
-the consuming playbook, so they must live in `templates/apache2/vhosts/` next to it:
+`apache` mode installs the vhosts in `certbot_apache2_ssl_vhosts` after the
+certificates exist. Templates are resolved relative to the consuming playbook, so they
+must live in `templates/apache2/vhosts/` next to it:
 
 ```yaml
 certbot_apache2_ssl_vhosts:
