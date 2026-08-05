@@ -11,6 +11,8 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+## [6.1.0] - 2026-08-05
+
 ### Added
 
 - **certbot:** new `dns-cloudflare` mode — DNS-01 validation via a Cloudflare
