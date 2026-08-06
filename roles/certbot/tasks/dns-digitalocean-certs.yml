@@ -14,3 +14,9 @@
     {{ certbot_dry_run | ternary('--dry-run', '') }}
   args:
     creates: "/etc/letsencrypt/live/{{ certbot_certs_item.name }}/cert.pem"
+
+- name: "Apply propagation seconds to renewal config for {{ certbot_certs_item.name }}"
+  ansible.builtin.include_tasks: dns-propagation.yml
+  vars:
+    certbot_propagation_plugin: digitalocean
+    certbot_propagation_seconds: "{{ certbot_digitalocean_dns_propagation_seconds }}"

@@ -1,0 +1,42 @@
+---
+- name: "Check renewal config for {{ certbot_certs_item.name }}"
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/renewal/{{ certbot_certs_item.name }}.conf"
+  register: certbot_renewal_conf
+
+# Bookworm's certbot 2.1 predates `certbot reconfigure`, so the renewal config
+# is edited directly. Drop this task when bookworm support is dropped.
+- name: "Set propagation seconds in renewal config for {{ certbot_certs_item.name }}"
+  community.general.ini_file:
+    path: "/etc/letsencrypt/renewal/{{ certbot_certs_item.name }}.conf"
+    section: renewalparams
+    option: "dns_{{ certbot_propagation_plugin }}_propagation_seconds"
+    value: "{{ certbot_propagation_seconds }}"
+    mode: "0644"
+  when:
+    - ansible_facts['distribution_major_version'] | int < 13
+    - certbot_renewal_conf.stat.exists
+
+- name: "Read renewal config for {{ certbot_certs_item.name }}"
+  ansible.builtin.slurp:
+    src: "/etc/letsencrypt/renewal/{{ certbot_certs_item.name }}.conf"
+  register: certbot_renewal_conf_content
+  when:
+    - ansible_facts['distribution_major_version'] | int >= 13
+    - certbot_renewal_conf.stat.exists
+
+# reconfigure validates the new value with a dry run against the staging
+# server, so it only runs when the stored value differs.
+- name: "Set propagation seconds via reconfigure for {{ certbot_certs_item.name }}"
+  ansible.builtin.command: >
+    certbot reconfigure
+    --cert-name "{{ certbot_certs_item.name }}"
+    --dns-{{ certbot_propagation_plugin }}-propagation-seconds {{ certbot_propagation_seconds }}
+    --non-interactive
+  changed_when: true
+  when:
+    - ansible_facts['distribution_major_version'] | int >= 13
+    - certbot_renewal_conf.stat.exists
+    - >-
+      ('dns_' ~ certbot_propagation_plugin ~ '_propagation_seconds = ' ~ certbot_propagation_seconds)
+      not in certbot_renewal_conf_content.content | b64decode

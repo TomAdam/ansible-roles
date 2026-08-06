@@ -18,8 +18,10 @@ flagged with **BREAKING** and require a MAJOR version bump.
   `certbot_digitalocean_dns_propagation_seconds` (default `10`, matching the
   upstream plugin default) and `certbot_cloudflare_dns_propagation_seconds`
   (default `30`, raised from the upstream 10s which is too short for
-  Cloudflare). Applies to newly created certificates only; existing
-  certificates keep the propagation value saved in their renewal config.
+  Cloudflare). Existing certificates are updated too, so the value also
+  applies to renewals of already-issued certificates — via `certbot
+  reconfigure` on trixie, or by editing the renewal config directly on
+  bookworm (whose certbot predates `reconfigure`).
 
 ## [6.1.0] - 2026-08-05
 
