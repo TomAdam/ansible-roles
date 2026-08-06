@@ -27,6 +27,8 @@ Installs certbot and requests Let's Encrypt certificates in one of four modes:
 | `certbot_apache2_ssl_vhosts` | `apache2_vhosts` if defined, else `[]` | `apache` mode only: SSL vhosts to install once certificates exist; see below |
 | `certbot_digitalocean_dns_token` | Required in `dns-digitalocean` mode | DigitalOcean API token with all `domain` scopes |
 | `certbot_cloudflare_dns_token` | Required in `dns-cloudflare` mode | Cloudflare API token with Zone → DNS → Edit on the certificates' zones |
+| `certbot_digitalocean_dns_propagation_seconds` | `10` | Seconds to wait for DNS propagation before asking the ACME server to verify the record |
+| `certbot_cloudflare_dns_propagation_seconds` | `30` | Seconds to wait for DNS propagation before asking the ACME server to verify the record |
 
 ## Certificates
 

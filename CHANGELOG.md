@@ -11,6 +11,16 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+### Added
+
+- **certbot:** per-plugin DNS propagation wait, passed as
+  `--dns-<plugin>-propagation-seconds` on certificate creation:
+  `certbot_digitalocean_dns_propagation_seconds` (default `10`, matching the
+  upstream plugin default) and `certbot_cloudflare_dns_propagation_seconds`
+  (default `30`, raised from the upstream 10s which is too short for
+  Cloudflare). Applies to newly created certificates only; existing
+  certificates keep the propagation value saved in their renewal config.
+
 ## [6.1.0] - 2026-08-05
 
 ### Added

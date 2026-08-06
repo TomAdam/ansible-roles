@@ -4,6 +4,7 @@
     certbot certonly
     --dns-cloudflare
     --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
+    --dns-cloudflare-propagation-seconds {{ certbot_cloudflare_dns_propagation_seconds }}
     --non-interactive
     --agree-tos
     --email "{{ certbot_certs_item.admin_email }}"
