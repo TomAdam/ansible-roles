@@ -11,6 +11,8 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+## [6.2.0] - 2026-08-06
+
 ### Added
 
 - **certbot:** per-plugin DNS propagation wait, passed as
