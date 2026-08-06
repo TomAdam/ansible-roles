@@ -4,6 +4,7 @@
     certbot certonly
     --dns-cloudflare
     --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini
+    --dns-cloudflare-propagation-seconds {{ certbot_cloudflare_dns_propagation_seconds }}
     --non-interactive
     --agree-tos
     --email "{{ certbot_certs_item.admin_email }}"
@@ -13,3 +14,9 @@
     {{ certbot_dry_run | ternary('--dry-run', '') }}
   args:
     creates: "/etc/letsencrypt/live/{{ certbot_certs_item.name }}/cert.pem"
+
+- name: "Apply propagation seconds to renewal config for {{ certbot_certs_item.name }}"
+  ansible.builtin.include_tasks: dns-propagation.yml
+  vars:
+    certbot_propagation_plugin: cloudflare
+    certbot_propagation_seconds: "{{ certbot_cloudflare_dns_propagation_seconds }}"

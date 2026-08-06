@@ -2,3 +2,5 @@
 certbot_certs: []
 certbot_dry_run: false
 certbot_apache2_ssl_vhosts: "{{ apache2_vhosts | default([]) }}"
+certbot_digitalocean_dns_propagation_seconds: 10
+certbot_cloudflare_dns_propagation_seconds: 30
