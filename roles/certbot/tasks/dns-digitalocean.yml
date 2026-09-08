@@ -15,9 +15,17 @@
     cache_valid_time: 3600
   when: ansible_facts['distribution_major_version'] | int >= 13
 
+- name: Gather certbot package version
+  ansible.builtin.package_facts:
+    manager: apt
+  when: ansible_facts['distribution_major_version'] | int >= 13
+
+# Each plugin release pins acme/certbot to its own version, so an unpinned install
+# drags in a newer certbot and a cryptography that pip cannot install over Debian's.
+# Pin to the apt certbot's upstream version (4.0.0-2+deb13u1 -> 4.0.0) instead.
 - name: Install DO DNS plugin via pip
   ansible.builtin.pip:
-    name: certbot-dns-digitalocean
+    name: "certbot-dns-digitalocean=={{ (ansible_facts.packages.certbot | first).version | split('-') | first }}"
     state: present
     extra_args: --break-system-packages
   when: ansible_facts['distribution_major_version'] | int >= 13

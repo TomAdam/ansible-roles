@@ -13,6 +13,9 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ### Fixed
 
+- **certbot:** on trixie the DigitalOcean DNS plugin is now pip-pinned to the apt
+  certbot version instead of installing the latest release; 5.8.0 requires
+  `cryptography>=47`, which pip cannot install over Debian's packaged 43.0.0.
 - **node:** the per-user nvm clone no longer initialises nvm's test-fixture
   submodule, which on older tags (<= 0.40.3) points at an SSH URL and failed the
   converge on hosts without an SSH agent or GitHub key.
