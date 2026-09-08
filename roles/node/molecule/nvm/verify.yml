@@ -33,6 +33,16 @@
         that:
           - node_verify_nvm_tag.stdout == 'v' ~ node_molecule_nvm_version
 
+    - name: Stat the test-fixture submodule checkout
+      ansible.builtin.stat:
+        path: "/home/{{ node_molecule_user }}/.nvm/test/fixtures/nvmrc/.git"
+      register: node_verify_nvm_submodule
+
+    - name: Assert the clone did not initialise submodules
+      ansible.builtin.assert:
+        that:
+          - not node_verify_nvm_submodule.stat.exists
+
     - name: Read the test user's .bashrc
       ansible.builtin.slurp:
         src: "/home/{{ node_molecule_user }}/.bashrc"

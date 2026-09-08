@@ -11,6 +11,12 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+### Fixed
+
+- **node:** the per-user nvm clone no longer initialises nvm's test-fixture
+  submodule, which on older tags (<= 0.40.3) points at an SSH URL and failed the
+  converge on hosts without an SSH agent or GitHub key.
+
 ## [6.2.0] - 2026-08-06
 
 ### Added
