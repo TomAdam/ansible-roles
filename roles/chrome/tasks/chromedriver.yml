@@ -10,13 +10,13 @@
     url: https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json
     return_content: true
   register: chrome_chromedriver_channel_versions
-  when: chrome_chromedriver_version in chrome_release_channels
+  when: chrome_chromedriver_version | string in chrome_release_channels
 
 - name: Set the chromedriver target version
   ansible.builtin.set_fact:
     chrome_chromedriver_target_version: >-
       {{ chrome_chromedriver_channel_versions.json.channels[chrome_chromedriver_version | capitalize].version
-         if chrome_chromedriver_version in chrome_release_channels else chrome_chromedriver_version }}
+         if chrome_chromedriver_version | string in chrome_release_channels else chrome_chromedriver_version | string }}
 
 - name: Install chromedriver
   ansible.builtin.command: "npx --yes @puppeteer/browsers install chromedriver@{{ chrome_chromedriver_target_version }} --path /opt"

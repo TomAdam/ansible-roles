@@ -32,13 +32,13 @@
     url: https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json
     return_content: true
   register: chrome_channel_versions
-  when: chrome_version in chrome_release_channels
+  when: chrome_version | string in chrome_release_channels
 
 - name: Set the chrome target version
   ansible.builtin.set_fact:
     chrome_target_version: >-
       {{ chrome_channel_versions.json.channels[chrome_version | capitalize].version
-         if chrome_version in chrome_release_channels else chrome_version }}
+         if chrome_version | string in chrome_release_channels else chrome_version | string }}
 
 - name: Install chrome
   ansible.builtin.command: "npx --yes @puppeteer/browsers install chrome@{{ chrome_target_version }} --path /opt"

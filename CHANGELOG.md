@@ -11,6 +11,13 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+### Fixed
+
+- **chrome:** `chrome_version` / `chrome_chromedriver_version` set as a bare YAML int
+  (e.g. `127`) no longer fail the install task under ansible-core 2.19+, where native
+  type preservation made the target-version fact an int; the role now coerces the
+  version to a string.
+
 ## [6.2.1] - 2026-09-08
 
 ### Fixed

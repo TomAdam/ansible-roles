@@ -1,9 +1,12 @@
 ---
-# Installs the Chrome stable that prepare.yml resolved and pinned, so the
-# idempotence re-run targets the same version even if Google promotes a new
+# Installs the Chrome stable milestone that prepare.yml resolved and pinned, so
+# the idempotence re-run targets the same major even if Google promotes a new
 # stable between the two converges. Real playbooks use the default channel.
-# chrome_install_chromedriver stays at its default (false) to keep the
-# scenario to one ~150 MB browser download.
+# The milestone is deliberately passed as a bare int: under ansible-core 2.19+
+# native templating this reaches the role as an int, exactly like a caller
+# writing `chrome_version: 127`, which used to break the install task.
+# chromedriver is enabled because it shares the same version handling and is a
+# small download.
 - name: Converge
   hosts: all
   become: true
@@ -15,4 +18,5 @@
   roles:
     - role: tborealis.roles.chrome
       vars:
-        chrome_version: "{{ chrome_pinned_version.content | b64decode | trim }}"
+        chrome_version: "{{ chrome_pinned_version.content | b64decode | trim | split('.') | first | int }}"
+        chrome_install_chromedriver: true
