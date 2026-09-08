@@ -22,12 +22,15 @@
         state: absent
       when: node_nvm_dir.stat.exists and not node_nvm_git_dir.stat.exists
 
+    # nvm's only submodule is a test fixture, and on tags <= 0.40.3 its URL
+    # is SSH (git@github.com:), which needs a key or agent the host may lack.
     - name: "Install nvm {{ node_nvm_version }}"
       ansible.builtin.git:
         repo: https://github.com/nvm-sh/nvm
         dest: "~/.nvm"
         version: "v{{ node_nvm_version }}"
         depth: 1
+        recursive: false
 
     - name: Manage nvm initialisation in .bashrc
       ansible.builtin.blockinfile:

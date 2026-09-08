@@ -74,8 +74,8 @@ node_nvm_config:
         global_packages: [gulp, yarn@1.22.22]
 ```
 
-nvm is installed per user via a git clone at the pinned tag (its official
-manual-install method — no `curl | bash`), with the init lines managed as a
+nvm is installed per user via a git clone at the pinned tag, without submodules
+(its official manual-install method — no `curl | bash`), with the init lines managed as a
 block in `~/.bashrc`. `default_version: system` falls through to the apt
 Node when no version is picked. Per-version package managers are just
 `global_packages` entries. `nvm install` fetches official nodejs.org
