@@ -11,6 +11,8 @@ flagged with **BREAKING** and require a MAJOR version bump.
 
 ## [Unreleased]
 
+## [6.2.1] - 2026-09-08
+
 ### Fixed
 
 - **certbot:** on trixie the DigitalOcean DNS plugin is now pip-pinned to the apt
