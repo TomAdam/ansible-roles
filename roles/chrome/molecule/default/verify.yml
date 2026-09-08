@@ -35,3 +35,24 @@
       ansible.builtin.assert:
         that:
           - "'<html>' in chrome_verify_headless.stdout"
+
+    - name: Stat the chromedriver link
+      ansible.builtin.stat:
+        path: /usr/local/bin/chromedriver
+      register: chrome_verify_chromedriver_link
+
+    - name: Assert chromedriver is linked into the puppeteer install path
+      ansible.builtin.assert:
+        that:
+          - chrome_verify_chromedriver_link.stat.islnk
+          - chrome_verify_chromedriver_link.stat.lnk_source is match('/opt/chromedriver/')
+
+    - name: Check the chromedriver version
+      ansible.builtin.command: /usr/local/bin/chromedriver --version
+      register: chrome_verify_chromedriver_version
+      changed_when: false
+
+    - name: Assert chromedriver reports a version string
+      ansible.builtin.assert:
+        that:
+          - chrome_verify_chromedriver_version.stdout is search('ChromeDriver \d+\.\d+\.\d+\.\d+')
